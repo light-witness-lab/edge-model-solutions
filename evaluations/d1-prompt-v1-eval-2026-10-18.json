@@ -1,0 +1,669 @@
+{
+  "id": "d1-prompt-v1-eval-2026-10-18",
+  "purpose": "T07 isolated, pre-registered prompt-revision probe for the composition choice task. Tests sensitivity to obvious framing signals on programmatic sheets; it is NOT an aesthetic-quality test and cannot upgrade the artifact beyond loaded-only.",
+  "model": "onnx-community/d1-omni-600M-ONNX@4ebc1b9 (decision_q4)",
+  "runtime": "onnxruntime 1.22.0, desktop JVM, 4 threads",
+  "date": "2026-10-18",
+  "probe_set": {
+    "generator": "deterministic Graphics2D, no RNG; geometry mirrors CandidateContactSheet (512 canvas, rgb244 ground, 256 quadrants, bold A/B/C labels, 240x208 photo rects)",
+    "bias_probes": [
+      "P1-uniform (three identical empty mid-gray photos)",
+      "P2-same-scene (three identical good photos)"
+    ],
+    "discrimination_probes": "18 = 6 scene variants x good panel rotated A/B/C; GOOD = whole high-contrast subject on a thirds point with breathing room; CUT = subject centered on the photo's vertical edge (half outside); CORNER = subject centered on a photo corner (sliver only)",
+    "caveat": "geometric shapes on gray are far from the photographic distribution; failure here can reflect either weak framing sensitivity or out-of-distribution probes. It still suffices to reject a claimed improvement, since the pre-registered rule required non-inferiority.",
+    "caveat_s1_s5": "variants s1 and s5 share all probe-driving moduli (%2/%3/%4), so their sheets are near-duplicates; effective discrimination diversity is 5 variants x 3 positions = 15 (reported on all 18 as executed)"
+  },
+  "prompts": {
+    "v0": {
+      "question": "Which crop gives the best composition?",
+      "options": [
+        "a: crop option A",
+        "b: crop option B",
+        "c: crop option C"
+      ],
+      "state": ""
+    },
+    "v1": {
+      "question": "Which panel has the best composition? Prefer a clear main subject, balanced placement on the thirds or a centered symmetric subject, breathing room around the subject, and no important object cut by the frame edge.",
+      "options": [
+        "A: crop shown in panel A",
+        "B: crop shown in panel B",
+        "C: crop shown in panel C"
+      ],
+      "state": "Three crop options of one photograph, shown as panels labelled A, B and C.",
+      "version": "comp-choice-v1"
+    }
+  },
+  "pre_registered_decision_rule": "adopt v1 iff v1.accuracy>=v0.accuracy over 18 sheets and v1.bias_mean_max_prob<=v0+0.05; <4/18 difference = no observable difference",
+  "sheets": [
+    {
+      "kind": "bias",
+      "v0": {
+        "probs": [
+          0.4768,
+          0.3196,
+          0.2036
+        ],
+        "margin": 0.1571,
+        "gate_pass": true,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": 0
+      },
+      "id": "P1-uniform",
+      "v1": {
+        "probs": [
+          0.5175,
+          0.2332,
+          0.2493
+        ],
+        "margin": 0.2682,
+        "gate_pass": true,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": 0
+      },
+      "good_panel": null
+    },
+    {
+      "kind": "bias",
+      "v0": {
+        "probs": [
+          0.4185,
+          0.2297,
+          0.3518
+        ],
+        "margin": 0.0668,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "id": "P2-same-scene",
+      "v1": {
+        "probs": [
+          0.3611,
+          0.3304,
+          0.3086
+        ],
+        "margin": 0.0307,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": null
+      },
+      "good_panel": null
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.3902,
+          0.2513,
+          0.3585
+        ],
+        "margin": 0.0317,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "id": "D-s0-goodA",
+      "v1": {
+        "probs": [
+          0.4446,
+          0.2564,
+          0.299
+        ],
+        "margin": 0.1456,
+        "gate_pass": true,
+        "correct": true,
+        "text_tokens": 93,
+        "selected": 0
+      },
+      "good_panel": "A"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.3152,
+          0.3751,
+          0.3097
+        ],
+        "margin": 0.0599,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "id": "D-s0-goodB",
+      "v1": {
+        "probs": [
+          0.4228,
+          0.2202,
+          0.357
+        ],
+        "margin": 0.0658,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": null
+      },
+      "good_panel": "B"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.1098,
+          0.281,
+          0.6092
+        ],
+        "margin": 0.3282,
+        "gate_pass": true,
+        "correct": true,
+        "text_tokens": 35,
+        "selected": 2
+      },
+      "id": "D-s0-goodC",
+      "v1": {
+        "probs": [
+          0.3652,
+          0.3359,
+          0.2989
+        ],
+        "margin": 0.0293,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": null
+      },
+      "good_panel": "C"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.2485,
+          0.4215,
+          0.33
+        ],
+        "margin": 0.0914,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "id": "D-s1-goodA",
+      "v1": {
+        "probs": [
+          0.4733,
+          0.273,
+          0.2537
+        ],
+        "margin": 0.2004,
+        "gate_pass": true,
+        "correct": true,
+        "text_tokens": 93,
+        "selected": 0
+      },
+      "good_panel": "A"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.3192,
+          0.2059,
+          0.4749
+        ],
+        "margin": 0.1557,
+        "gate_pass": true,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": 2
+      },
+      "id": "D-s1-goodB",
+      "v1": {
+        "probs": [
+          0.4705,
+          0.2693,
+          0.2602
+        ],
+        "margin": 0.2011,
+        "gate_pass": true,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": 0
+      },
+      "good_panel": "B"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.1827,
+          0.2514,
+          0.5659
+        ],
+        "margin": 0.3145,
+        "gate_pass": true,
+        "correct": true,
+        "text_tokens": 35,
+        "selected": 2
+      },
+      "id": "D-s1-goodC",
+      "v1": {
+        "probs": [
+          0.3417,
+          0.3445,
+          0.3138
+        ],
+        "margin": 0.0027,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": null
+      },
+      "good_panel": "C"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.5903,
+          0.1676,
+          0.2421
+        ],
+        "margin": 0.3482,
+        "gate_pass": true,
+        "correct": true,
+        "text_tokens": 35,
+        "selected": 0
+      },
+      "id": "D-s2-goodA",
+      "v1": {
+        "probs": [
+          0.4089,
+          0.2705,
+          0.3205
+        ],
+        "margin": 0.0884,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": null
+      },
+      "good_panel": "A"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.5908,
+          0.236,
+          0.1732
+        ],
+        "margin": 0.3548,
+        "gate_pass": true,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": 0
+      },
+      "id": "D-s2-goodB",
+      "v1": {
+        "probs": [
+          0.3764,
+          0.2291,
+          0.3945
+        ],
+        "margin": 0.0181,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": null
+      },
+      "good_panel": "B"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.1111,
+          0.5735,
+          0.3154
+        ],
+        "margin": 0.2581,
+        "gate_pass": true,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": 1
+      },
+      "id": "D-s2-goodC",
+      "v1": {
+        "probs": [
+          0.4346,
+          0.286,
+          0.2794
+        ],
+        "margin": 0.1486,
+        "gate_pass": true,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": 0
+      },
+      "good_panel": "C"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.4135,
+          0.195,
+          0.3915
+        ],
+        "margin": 0.0221,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "id": "D-s3-goodA",
+      "v1": {
+        "probs": [
+          0.3915,
+          0.2967,
+          0.3118
+        ],
+        "margin": 0.0796,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": null
+      },
+      "good_panel": "A"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.2109,
+          0.1901,
+          0.599
+        ],
+        "margin": 0.388,
+        "gate_pass": true,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": 2
+      },
+      "id": "D-s3-goodB",
+      "v1": {
+        "probs": [
+          0.3847,
+          0.3648,
+          0.2506
+        ],
+        "margin": 0.0199,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": null
+      },
+      "good_panel": "B"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.3088,
+          0.1895,
+          0.5017
+        ],
+        "margin": 0.1929,
+        "gate_pass": true,
+        "correct": true,
+        "text_tokens": 35,
+        "selected": 2
+      },
+      "id": "D-s3-goodC",
+      "v1": {
+        "probs": [
+          0.3993,
+          0.275,
+          0.3257
+        ],
+        "margin": 0.0736,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": null
+      },
+      "good_panel": "C"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.2786,
+          0.1574,
+          0.564
+        ],
+        "margin": 0.2854,
+        "gate_pass": true,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": 2
+      },
+      "id": "D-s4-goodA",
+      "v1": {
+        "probs": [
+          0.37,
+          0.3005,
+          0.3295
+        ],
+        "margin": 0.0405,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": null
+      },
+      "good_panel": "A"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.3432,
+          0.3269,
+          0.3299
+        ],
+        "margin": 0.0133,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "id": "D-s4-goodB",
+      "v1": {
+        "probs": [
+          0.3551,
+          0.2781,
+          0.3667
+        ],
+        "margin": 0.0116,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": null
+      },
+      "good_panel": "B"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.1268,
+          0.2353,
+          0.6379
+        ],
+        "margin": 0.4026,
+        "gate_pass": true,
+        "correct": true,
+        "text_tokens": 35,
+        "selected": 2
+      },
+      "id": "D-s4-goodC",
+      "v1": {
+        "probs": [
+          0.343,
+          0.3775,
+          0.2796
+        ],
+        "margin": 0.0345,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": null
+      },
+      "good_panel": "C"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.2485,
+          0.4215,
+          0.33
+        ],
+        "margin": 0.0914,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "id": "D-s5-goodA",
+      "v1": {
+        "probs": [
+          0.4733,
+          0.273,
+          0.2537
+        ],
+        "margin": 0.2004,
+        "gate_pass": true,
+        "correct": true,
+        "text_tokens": 93,
+        "selected": 0
+      },
+      "good_panel": "A"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.3192,
+          0.2059,
+          0.4749
+        ],
+        "margin": 0.1557,
+        "gate_pass": true,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": 2
+      },
+      "id": "D-s5-goodB",
+      "v1": {
+        "probs": [
+          0.4705,
+          0.2693,
+          0.2602
+        ],
+        "margin": 0.2011,
+        "gate_pass": true,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": 0
+      },
+      "good_panel": "B"
+    },
+    {
+      "kind": "discrimination",
+      "v0": {
+        "probs": [
+          0.1827,
+          0.2514,
+          0.5659
+        ],
+        "margin": 0.3145,
+        "gate_pass": true,
+        "correct": true,
+        "text_tokens": 35,
+        "selected": 2
+      },
+      "id": "D-s5-goodC",
+      "v1": {
+        "probs": [
+          0.3417,
+          0.3445,
+          0.3138
+        ],
+        "margin": 0.0027,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 93,
+        "selected": null
+      },
+      "good_panel": "C"
+    }
+  ],
+  "summary_v0": {
+    "argmax_correct": "9/18",
+    "argmax_correct_by_good_panel_position": {
+      "A": 3,
+      "B": 1,
+      "C": 5
+    },
+    "argmax_position_distribution": {
+      "A": 5,
+      "B": 4,
+      "C": 9
+    },
+    "gate_passed": "12/18",
+    "gate_selected_correct": "6/18",
+    "bias_mean_max_prob_on_P1_P2": 0.4476,
+    "bias_max_prob_per_probe": {
+      "P1-uniform": 0.4768,
+      "P2-same-scene": 0.4185
+    }
+  },
+  "summary_v1": {
+    "argmax_correct": "6/18",
+    "argmax_correct_by_good_panel_position": {
+      "A": 6,
+      "B": 0,
+      "C": 0
+    },
+    "argmax_position_distribution": {
+      "A": 13,
+      "B": 3,
+      "C": 2
+    },
+    "gate_passed": "6/18",
+    "gate_selected_correct": "3/18",
+    "bias_mean_max_prob_on_P1_P2": 0.4393,
+    "bias_max_prob_per_probe": {
+      "P1-uniform": 0.5175,
+      "P2-same-scene": 0.3611
+    }
+  },
+  "verdict": {
+    "decision": "REJECT v1, keep comp-choice-v0 in the app",
+    "accuracy_check": "v1 argmax 6/18 < v0 9/18; gate-selected correct 3/18 < 6/18 -> adoption condition (v1 >= v0) not met",
+    "bias_check": "v1 mean max-prob 0.4393 vs v0 0.4476 (condition met), but the preference simply moved: v0 picks physical panel C on 9/18 sheets (5/6 when the good panel is C), v1 picks panel A on 13/18 sheets (6/6 when good is A, 0/12 when good is B or C)",
+    "interpretation": "Both wordings behave as positional responders on this probe set; the criteria-rich question and described options did not produce content following, they halved gate passes (12->6) and rotated the favoured slot. No prompt-only change in this experiment improves composition judgement.",
+    "app_state": "D1Prompt reverted to v0 wording (empty state, 'Which crop gives the best composition?', 'a/b/c: crop option A/B/C'); CANDIDATE_PROMPT_VERSION pin and prompt= log field retained for future attributable experiments",
+    "evidence_level": "loaded-only unchanged; aesthetic validity on real street photos remains unverified; future work needs the independent labelled photographic set, not stronger wording on synthetic shapes"
+  }
+}

@@ -66,6 +66,12 @@ On an Android 35 ARM64 AVD, the bundled SmolVLM 256M q4 artifact imported into t
 - License changed relative to SmolVLM: **LFM Open License v1.0** with a US$10M annual-revenue commercial threshold. The app's default APK must not bundle these weights silently and the install flow should name the model and license.
 - Status is `loaded-only`, not product-verified: graph IO, kernels and the timeout/abstain path are evidenced, but real-device latency (Honor Vs3) and aesthetic validity require the independent labelled set before any product claim.
 
+## Prompt revision v1 rejected (2026-10-18; T07)
+
+A criteria-rich v1 wording — a panel-layout `state`, described options (`A: crop shown in panel A`, …), and a question naming thirds/centered symmetry/breathing-room/edge-cutting criteria — was tested against the shipped symmetric v0 (`"a: crop option A"` …, `"Which crop gives the best composition?"`, empty state) under a rule registered before seeing results. The probe used 20 deterministic programmatic contact sheets (2 bias probes + 18 good-vs-cut/corner probes with the good panel rotated across A/B/C), the real pinned graphs on desktop ORT 1.22, and vision features shared by both wordings.
+
+v1 failed non-inferiority: 9/18 → 6/18 argmax correct, 6/18 → 3/18 gate-selected correct, and the physical-panel distribution rotated from C-leaning (A5/B4/C9) to A-leaning (A13/B3/C2) — i.e. the wording moved positional bias without adding content following; P1/P2 max-prob was unchanged (0.4476 vs 0.4393). The app keeps `comp-choice-v0`; the prompt revision constant and a `prompt=` log field were kept so device evidence stays attributable. Synthetic shapes are OOD from photographs, so this run rejects the claimed improvement but says nothing positive about aesthetic quality — that still needs the independent labelled photo set. Raw data and the frozen harness: [`evaluations/d1-prompt-v1-eval-2026-10-18.json`](../../evaluations/d1-prompt-v1-eval-2026-10-18.json), [`scripts/d1-prompt-eval`](../../scripts/d1-prompt-eval/).
+
 ## Reusable lessons
 
 - Preview rate and inference rate are separate budgets.
