@@ -1,0 +1,86 @@
+{
+  "solution": "composition-assistant",
+  "model": "d1-omni-600m",
+  "revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+  "upstream_revision": "02b55d7076f15129e59ab3f94783f32c4b088674",
+  "source": {
+    "repository": "onnx-community/d1-omni-600M-ONNX",
+    "upstream": "LiquidAI/d1-omni-600M",
+    "downloaded_via": "hf-mirror.com (direct huggingface.co unreachable from the build network)",
+    "fetched_on": "2026-10-17",
+    "q4_graph_added_on": "2026-10-18"
+  },
+  "device": {
+    "name": "Android Emulator emulator-5580 (arm64-v8a, SDK 35, software GPU)",
+    "backend": "ONNX Runtime Android 1.22.0 ARM64, CPU EP (vision falls back from XNNPACK)"
+  },
+  "desktop_check": {
+    "name": "macOS x86_64, ONNX Runtime 1.22.0 JVM",
+    "date": "2026-10-18",
+    "result": "pass",
+    "sheets": [
+      {"sheet": "left-mass", "logits": [-3.7124164, -3.8471172, -3.0739892], "probabilities": [0.26543, 0.23198, 0.50259], "selected": 2, "margin": 0.23716, "vision_ms": 1202, "decision_ms": 917},
+      {"sheet": "center-mass", "logits": [-5.451872, -5.008895, -2.4391048], "probabilities": [0.04367, 0.06800, 0.88833], "selected": 2, "margin": 0.82033, "vision_ms": 1089, "decision_ms": 657},
+      {"sheet": "uniform-mid-gray", "logits": [-5.138908, -5.066436, -3.7048538], "probabilities": [0.15947, 0.17145, 0.66908], "selected": 2, "margin": 0.49762, "vision_ms": 987, "decision_ms": 664}
+    ],
+    "notes": "Synthetic 512x512 ARGB sheets; image_features [256,1024], text 35 tokens with marker positions [11,19,27], logits [1,3], all finite. These prove the IO contract and runnable kernels, not aesthetic quality."
+  },
+  "runtime": "ONNX Runtime 1.22.0",
+  "status": "loaded-only",
+  "bundle_bytes": 437985561,
+  "bundle_profile": "vision_encoder_fp16 + embed_tokens_quantized (Q4 block gather) + decision_q4 (4-bit MatMulNBits), all with external data",
+  "artifact_checks": {
+    "all_files_sha256_verified": true,
+    "license_included": "LFM Open License v1.0",
+    "graph_io_confirmed_offline": true,
+    "graph_io": {
+      "vision_encoder_fp16": {
+        "inputs": "pixel_values f32 [N,1024,768], pixel_attention_mask i64 [N,1024], spatial_shapes i64 [N,2]",
+        "outputs": "image_features f32 [num_features,1024]",
+        "opset": "ai.onnx 21 + com.microsoft"
+      },
+      "embed_tokens_quantized": {
+        "inputs": "input_ids i64 [B,L]",
+        "outputs": "inputs_embeds f32 [B,L,1024]",
+        "quantization": "Q4 block gather (com.microsoft GatherBlockQuantized)"
+      },
+      "decision_q4": {
+        "inputs": "inputs_embeds f32 [B,P+L,1024], attention_mask i64, prefix_len i64, marker_pos i64, marker_mask i64, qtype i64",
+        "outputs": "logits f32 [B,K]",
+        "quantization": "MatMulNBits 4-bit, opset ai.onnx 18 + com.microsoft"
+      }
+    }
+  },
+  "q8_rejection": {
+    "graph": "decision_quantized.onnx (8-bit MatMulNBits, 362,902,528-byte external data)",
+    "error": "MatMulNBits '/trunk/conv/in_proj/MatMul_Q8': nbits_ == 4 was false. Only 4b quantization is supported for unpacked compute.",
+    "root_cause": "Exported nodes lack the accuracy_level=4 attribute; ORT 1.22 then selects SQNBIT_CompFp32 (unpacked), which implements 4-bit only. Reproduced on macOS x86_64 and Android arm64.",
+    "resolution": "Ship decision_q4.onnx; verified runnable on both platforms."
+  },
+  "device_run": {
+    "date": "2026-10-18",
+    "camera_preview": "live emulator scene (ARCore-style room), LUMIX_MONO preset, realtime composition enabled",
+    "runs": [
+      {"outcome": "accepted", "selected": 2, "support": 1.0, "margin": 0.21382323, "probabilities": [0.20371939, 0.29122868, 0.5050519], "raw_scores": [-4.063389, -3.7060235, -3.155471], "vision_ms": 11495, "decision_ms": 4517, "total_ms": 16015, "text_tokens": 35},
+      {"outcome": "timed_out", "budget_ms": 30000, "vision_ms": 9609, "note": "Software-GPU emulator; queued behind the first run plus slow vision. App abstained and kept the rule overlay (model_outcome=TIMED_OUT), as designed."}
+    ]
+  },
+  "upstream_parity_reported": {
+    "source": "onnx-community/d1-omni-600M-ONNX README",
+    "image_max_probability_delta_q8_fp16vision": 0.047,
+    "q4_image_parity": "not measured upstream"
+  },
+  "output": {
+    "contract": "softmax over option marker logits (choice/noul/score); zero generated tokens; no coordinates",
+    "valid_recommendation_bbox": false,
+    "note": "The earlier 384x384 score/problem_en/recommend_bbox JSON assumption was wrong; input is 512x512 SigLIP2 NaFlex and answers are marker probabilities. Geometry stays with FastCompositionAdvisor."
+  },
+  "failure_behavior": "Observed on device: a 30 s budget timeout returns null, the rule-based overlay and Chinese rule advice stay visible, and a 15 s cooldown applies. Session-load failure path remains code-only evidence.",
+  "open_items": [
+    "Honor Vs3 real-device timing (vision 11.5 s and decision 4.5 s are software-emulator numbers, not representative of silicon)",
+    "permutation-consistency and positional-bias check on real contact sheets",
+    "independent labelled composition preference set; aesthetic quality is not established by these runs",
+    "memory under real camera contention on device"
+  ],
+  "honor_vs3": "not-verified"
+}

@@ -1,0 +1,101 @@
+{
+  "id": "d1-omni-600m",
+  "source": {
+    "repository": "onnx-community/d1-omni-600M-ONNX",
+    "revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+    "url": "https://huggingface.co/onnx-community/d1-omni-600M-ONNX/tree/4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+    "upstream_repository": "LiquidAI/d1-omni-600M",
+    "upstream_revision": "02b55d7076f15129e59ab3f94783f32c4b088674"
+  },
+  "license": "LFM Open License v1.0 (upstream checkpoint and ONNX derivative; see LICENSE and LICENSE-NOTICE.md)",
+  "format": "ONNX image decision stack (MatMulNBits 4-bit; vision fp16, embedding/decision 4-bit quantized)",
+  "runtime": "ONNX Runtime 1.22 ARM64 (opsets: vision ai.onnx v21 + com.microsoft, decision ai.onnx v18 + com.microsoft)",
+  "graphs": {
+    "vision": "onnx/vision_encoder_fp16.onnx",
+    "embedding": "onnx/embed_tokens_quantized.onnx",
+    "decision": "onnx/decision_q4.onnx"
+  },
+  "files": [
+    {
+      "path": "LICENSE",
+      "bytes": 10572,
+      "sha256": "9953509cbd8c1c6ce7b06ddf74fcc204a892692316201dd8f7400a84790d4120"
+    },
+    {
+      "path": "config.json",
+      "bytes": 2433,
+      "sha256": "6402e50bd64e2d51c5f8dead2067d7873f30ec850f0cf1e732e4264b1576d313"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 4733371,
+      "sha256": "1efc3a6609abf6b63b1f47188d139f3b59973a6a434dffe970a7261a51ed2711"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 259,
+      "sha256": "03efc74b752b899b6292ff7e607738be59e9f206fec9aca32bbc05e9184090fc"
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 728,
+      "sha256": "ab2195993036c7c8b2cac03adb2b0b228e8518f33a5bdd6c848673b89c65fcf7"
+    },
+    {
+      "path": "onnx/vision_encoder_fp16.onnx",
+      "bytes": 154620,
+      "sha256": "4f1ba67f47556db899965b5220abd16fa3751b5ad5175493c30b706fe5f1c8fd"
+    },
+    {
+      "path": "onnx/vision_encoder_fp16.onnx_data",
+      "bytes": 188469760,
+      "sha256": "26ba7cadd518c82272eee4a9606dfd0f56baf43e9da86298e3b893dbdc46101b"
+    },
+    {
+      "path": "onnx/embed_tokens_quantized.onnx",
+      "bytes": 705,
+      "sha256": "526651db3c7bd6d7af7264b627887ce72feec824e598f1ed61781ae49348ec86"
+    },
+    {
+      "path": "onnx/embed_tokens_quantized.onnx_data",
+      "bytes": 42991616,
+      "sha256": "87c53bcdb9ce92ec2ebc596402be66f5b070a87d6bb552d83bd320c970748ec9"
+    },
+    {
+      "path": "onnx/decision_q4.onnx",
+      "bytes": 380921,
+      "sha256": "7382f36321d163fc53b86ca8dba791642986bb1bca68a2e39ea03f7164954678"
+    },
+    {
+      "path": "onnx/decision_q4.onnx_data",
+      "bytes": 201240576,
+      "sha256": "d205a38f1364e55ec8ed10e75e45dd2bee9275879d6d131edbf970596a33858a"
+    }
+  ],
+  "total_bytes": 437985561,
+  "contract": {
+    "vision_inputs": {
+      "pixel_values": "float32 [num_crops, max_num_patches=1024, 3*16*16=768], RGB normalized to [-1,1], NaFlex patches",
+      "pixel_attention_mask": "int64 [num_crops, 1024]",
+      "spatial_shapes": "int64 [num_crops, 2] patch grid (ph, pw); a single 512x512 crop is [[32,32]]"
+    },
+    "vision_output": "image_features float32 [num_features, 1024]; 256 prefix embeddings for one 512x512 crop",
+    "embedding_inputs": {"input_ids": "int64 [1, length]"},
+    "embedding_output": "inputs_embeds float32 [1, length, 1024]",
+    "decision_inputs": {
+      "inputs_embeds": "float32 [1, prefix_len+length, 1024] vision prefix then token embeddings",
+      "attention_mask": "int64 [1, prefix_len+length] 1 for real positions",
+      "prefix_len": "int64 [1] vision prefix length (256)",
+      "marker_pos": "int64 [1, options] text-relative <mask> positions",
+      "marker_mask": "int64 [1, options] 1 for real options",
+      "qtype": "int64 [1] 0=choice, 1=score, 2=noul"
+    },
+    "decision_output": "logits float32 [1, options]; softmax over the option markers (no temperature is applied for image answers)"
+  },
+  "status": "loaded-only",
+  "validated_on": [
+    "ONNX Runtime 1.22.0, macOS x86_64 JVM, three synthetic 512x512 sheets (finite marker logits)",
+    "ONNX Runtime 1.22.0 Android, arm64-v8a SDK 35 emulator, live camera preview (one accepted decision, one 30 s timeout fallback)"
+  ],
+  "notes": "Decision graph is decision_q4 (4-bit MatMulNBits), not decision_quantized (8-bit): on ORT 1.22 the official 8-bit graph fails at session run with 'nbits_ == 4 was false. Only 4b quantization is supported for unpacked compute.' because its MatMulNBits nodes lack the accuracy_level=4 attribute that selects the prepacked SQ8 kernel; the failure reproduces on macOS x86_64 and Android arm64. The 4-bit graph runs on both. Audio graphs and the merged text model are intentionally excluded."
+}
