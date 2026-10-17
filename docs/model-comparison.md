@@ -1,0 +1,28 @@
+# Model and pipeline comparison
+
+This matrix consolidates model candidates and the non-model baseline found in the Street Snap source history. `not-verified` means there is no reproducible device result yet; it is not a quality ranking.
+
+| Candidate | Role in composition workflow | Input / cadence | Output contract | Evidence | Main trade-off or open question |
+| --- | --- | --- | --- | --- | --- |
+| **Rules-first `FastCompositionAdvisor`** | Generate content-related legal crop candidates and a safe visible guide | Current frame; fast local image statistics | Candidate rectangles plus rule reason | `verified` for visible UI and geometry checks in Street Snap `670308e`; not an AI quality claim | Fast and dependable fallback, but it does not learn aesthetics or object identity |
+| **SmolVLM 256M q4 ONNX** | Low-frequency candidate comparison fallback | 512×512 A/B/C contact sheet; one serial comparison or guarded second ordering | A/B/C choice with support and consistency gates | `loaded-only`; Android 35 ARM64 AVD sessions created, roughly 19–21 s for the measured path; invalid or inconsistent choices rejected | Smallest checked-in bundle; too slow on the AVD for live use and not trained for this composition contract |
+| **SmolVLM 256M full Int8** | Same fallback with a faster quantization profile | Same task and candidate contract | Same guarded A/B/C choice | `loaded-only` / historical timing; old coordinate task on AVD about 4.3–6.4 s, while guarded two-order comparisons were about 9.5–11.4 s | Larger package and still no proof of aesthetic improvement; timings are task- and scheduler-specific |
+| **SmolVLM 500M** | Larger VLM comparison candidate | To be benchmarked with the same candidate contact sheet | To be benchmarked; no app acceptance yet | `not-verified`; catalog revision `a588b6298f96d180aff4c31e259409d106b5571e`, roughly 347 MiB cited in app notes | More capacity and a much larger artifact; no local device quality or latency result |
+| **YOLOv11-Nano Int8** | High-frequency subject detection / tracking branch | 320×320 preview frame, intended every preview frame | Normalized subject bounding box | `not-verified`; target SOP only, no pinned revision or device run in local history | Likely suitable for a fast stable subject box, but subject detection is not the same as a recommended crop |
+| **d1-omni-600M Q4 ONNX** | Low-frequency composition reasoning branch | 384×384 frame plus English composition instruction, intended 1–2 fps | `score`, `problem_en`, `recommend_bbox` | `not-verified`; target SOP only, no pinned revision or device run in local history | Promising structured output shape, but import, license, latency, output validity and phone performance remain open |
+| **`jEV` / `GV` / `GEV` (names as recalled)** | Unresolved VLM suggestion from an earlier discussion | Unknown | Unknown | `not-verified` and **unidentified** | Do not map these names to a checkpoint until the exact repository or model card is supplied |
+
+## Reading the comparison
+
+The target architecture is a composition of roles, not a contest for one universal model:
+
+```text
+preview frame → fast subject box (optional) → candidate/geometry layer
+             → slower composition choice → schema gate → smoothing → UI overlay
+```
+
+The rules-first layer currently keeps the app useful when the model is absent, slow, stale, malformed or undecided. A future YOLO/d1 implementation must preserve that failure behavior and report its own measurements beside the SmolVLM evidence instead of replacing it.
+
+## Promotion criteria
+
+A candidate can move from `not-verified` to `loaded-only` only after its fixed artifact opens and runs on the named device. It can move to `verified` only after the complete camera path meets the stated acceptance checks: fresh valid outputs, controlled stale-result behavior, preview and shutter responsiveness, measured resource cost, and a quality test set independent from prompt tuning.

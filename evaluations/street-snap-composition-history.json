@@ -1,0 +1,32 @@
+{
+  "solution": "composition-assistant",
+  "app_repository": "light-witness-lab/street-snap",
+  "app_commit": "670308e",
+  "status": "loaded-only",
+  "baseline": {
+    "id": "fast-composition-advisor",
+    "status": "verified-for-visible-geometry",
+    "note": "Rules generate content-related candidate boxes; this is not a model quality result."
+  },
+  "model": {
+    "id": "smolvlm-256m",
+    "revision": "7e3e67edbbed1bf9888184d9df282b700a323964",
+    "format": "ONNX q4 fallback",
+    "role": "guarded A/B/C candidate comparison"
+  },
+  "device": "Android 35 ARM64 AVD",
+  "runtime": "ONNX Runtime Android",
+  "observations": {
+    "rule_first_visible_guide": true,
+    "model_choice_quality": "not-verified",
+    "historical_guarded_comparison_seconds": [9.5, 11.4],
+    "invalid_or_inconsistent_choices_rejected": true,
+    "honor_vs3": "not-verified"
+  },
+  "failure_behavior": "Keep the fresh rules guide when the model is absent, stale, malformed, slow or undecided.",
+  "source_records": [
+    "street-snap:README.md",
+    "street-snap:docs/composition-pipeline-sop.md",
+    "street-snap:docs/edge-model-plan.md"
+  ]
+}

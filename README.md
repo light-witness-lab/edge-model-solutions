@@ -124,7 +124,12 @@ This record is intentionally useful even though it did not meet the real-time re
 
 ## Relationship to Street Snap
 
-Street Snap is one consumer of these solutions. Its camera-specific implementation remains in the Street Snap repository; this repository stores the reusable solution knowledge, model combinations, measurement records, and visual explanations that can support Street Snap and future Light Witness Lab projects.
+Street Snap is the first consumer of these solutions. The repositories evolve together through a clear split:
+
+- `light-witness-lab/street-snap` owns the camera UI, capture lifecycle, frame routing, model adapter wiring, APKs, and device evidence.
+- `light-witness-lab/edge-model-solutions` owns reusable SOPs, model provenance, checked-in or externally referenced weights, comparison matrices, benchmarks, and failure records.
+
+When a Street Snap experiment changes a model, runtime, prompt, sampling budget, or acceptance result, add a dated evaluation here and link the Street Snap source commit or APK evidence. The app repository does not receive this repository's model weights by default, and this repository does not absorb APKs, signing files, private photos, or local task queues. See [the cross-project contract](docs/cross-project-contract.md) and [the model comparison](docs/model-comparison.md).
 
 ## Principles
 
