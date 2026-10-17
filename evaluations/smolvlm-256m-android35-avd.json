@@ -1,0 +1,27 @@
+{
+  "solution": "composition-assistant",
+  "model": "smolvlm-256m",
+  "revision": "7e3e67edbbed1bf9888184d9df282b700a323964",
+  "device": {
+    "name": "Android 35 ARM64 AVD",
+    "backend": "CPU"
+  },
+  "runtime": "ONNX Runtime Android",
+  "status": "loaded-only",
+  "bundle_bytes": 182318056,
+  "inference_seconds_observed": {
+    "min": 19,
+    "max": 21
+  },
+  "sessions_created": [
+    "vision",
+    "embedding",
+    "decoder"
+  ],
+  "output": {
+    "valid_recommendation_bbox": false,
+    "invalid_tokens_rejected": true
+  },
+  "failure_behavior": "stale or invalid output is discarded; UI stays in no-reliable-suggestion state",
+  "honor_vs3": "not-verified"
+}

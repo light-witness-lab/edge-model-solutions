@@ -1,0 +1,58 @@
+{
+  "id": "smolvlm-256m",
+  "source": {
+    "repository": "HuggingFaceTB/SmolVLM-256M-Instruct",
+    "revision": "7e3e67edbbed1bf9888184d9df282b700a323964",
+    "url": "https://huggingface.co/HuggingFaceTB/SmolVLM-256M-Instruct/tree/7e3e67edbbed1bf9888184d9df282b700a323964"
+  },
+  "license": "Apache-2.0 (upstream checkpoint; see LICENSE-NOTICE.md)",
+  "format": "ONNX q4",
+  "runtime": "ONNX Runtime ARM64",
+  "graphs": {
+    "vision": "onnx/vision_encoder_q4.onnx",
+    "embedding": "onnx/embed_tokens_quantized.onnx",
+    "decoder": "onnx/decoder_model_merged_q4.onnx"
+  },
+  "files": [
+    {
+      "path": "config.json",
+      "bytes": 7353,
+      "sha256": "b70fb4bfde88df9eeebc9d8ff523733b8bf70d6c9b06c610325960e06ae9db52"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 3548256,
+      "sha256": "5ece781dc8d2b2f3e2f289ca0ae50b17cfc27dd27bfe7971bb8241e0b964331a"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 28249,
+      "sha256": "36c6fd44d07d10fd8180ee6b46dcccf69fb7c06753968ff0d7e17b8bfe17b777"
+    },
+    {
+      "path": "preprocessor_config.json",
+      "bytes": 486,
+      "sha256": "6cb6e36d6fcb88ca1502c4a26750715dc3e7dedddc9a8f17b27d8d167d1457e7"
+    },
+    {
+      "path": "onnx/vision_encoder_q4.onnx",
+      "bytes": 63784987,
+      "sha256": "95814e6629ec465e7cf98a44edcee67abc06d41faa0d1acc410cf8a956cab488"
+    },
+    {
+      "path": "onnx/embed_tokens_quantized.onnx",
+      "bytes": 28385824,
+      "sha256": "4b919b829fe2bf225e42431230c56891116f0149e5170e36c99bcc0cfae0d2ef"
+    },
+    {
+      "path": "onnx/decoder_model_merged_q4.onnx",
+      "bytes": 86562901,
+      "sha256": "e3fd81130e30715580cf148398e48e2925b6219bff75e17d2a77add35a363f65"
+    }
+  ],
+  "total_bytes": 182318056,
+  "status": "loaded-only",
+  "validated_on": [
+    "Android 35 ARM64 AVD"
+  ]
+}
