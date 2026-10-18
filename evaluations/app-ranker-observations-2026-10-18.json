@@ -1,0 +1,70 @@
+{
+  "solution": "composition-assistant",
+  "record": "app-integration-observations",
+  "date": "2026-10-18",
+  "app_repository": "light-witness-lab/street-snap",
+  "app_commit_range": "f5d8cae..10c050f",
+  "verified_build_commit": "10c050f",
+  "status": "loaded-only",
+  "summary": "Observations after d1-omni-600m became the app's default on-device ranker (f5d8cae), with serial inference, cadence bounding and on-demand advice wired into the shipped camera UI. Emulator-only; nothing here is a real-device or aesthetic-quality result.",
+  "devices": [
+    {"name": "Android Emulator emulator-5580 portrait", "display": "1080x2340, 420dpi", "gpu": "software", "analysis_stream": "640x480 YUV ImageAnalysis"},
+    {"name": "Android Emulator emulator-5580 landscape", "display": "1170x540, 213dpi", "gpu": "software", "analysis_stream": "384x288 analysis frames, different contact-sheet layout"}
+  ],
+  "default_ranker": {
+    "id": "d1-omni-600m",
+    "became_default_in": "f5d8cae",
+    "fallback_switchable_in_ui": "smolvlm-256m",
+    "bundle_bytes": 437985561,
+    "note": "Default APK ships without weights; the 417.7 MiB bundle is an explicit in-app download and the install flow names the model and the LFM Open License v1.0."
+  },
+  "rule_layer": {
+    "id": "fast-composition-advisor",
+    "status": "verified-for-visible-geometry",
+    "frame_clock_ms": 250,
+    "fixed_per_tick_overhead_ms_approx": 180,
+    "observed_rate": "about 2.4 analyses/s after serial-inference work (about 0.87/s baseline: 26 analyses in 30 s, 1.12-1.26 s intervals)",
+    "source": "street-snap docs/composition-pipeline-sop.md, README v0.3 notes"
+  },
+  "scheduling": {
+    "model_concurrency": "single serial pass; no second large-image job queues while one runs",
+    "cooldown_seconds_after_model_pass": [3, 15],
+    "scene_change_tracking": "unchanged scenes reuse the previous result (FrameSceneTracker); identical box+copy does not re-emit the overlay",
+    "preview_independence": "slow reasoning never blocks the preview; LatestFrameGate keeps only the latest pending frame"
+  },
+  "d1_gate_observations": {
+    "portrait_1080x2340": "the two-round guarded comparison usually approached or exceeded the 30 s total budget under software rendering; the UI timed out and kept the rule overlay, with the status line naming the model timeout",
+    "landscape_540x1170": "comparison completed in roughly 16-22 s, but across 70+ standing positions in both orientations the d1 gate outcome was almost always UNSTABLE (two rounds disagreed) or abstain; no stable acceptance was observed for d1 in either orientation",
+    "interpretation": "Consistent with the offline finding that quantized models give positional answers on static/synthetic scenes and the permutation-consistency gate is deliberately strict. It is an emulator/software-render observation, not a model-quality verdict."
+  },
+  "smolvlm_rare_acceptance": {
+    "model": "smolvlm-256m",
+    "revision": "7e3e67edbbed1bf9888184d9df282b700a323964",
+    "device": "landscape 1170x540, 213dpi, software GPU",
+    "event": "exactly one stable gate acceptance across dozens of coarse/fine standing positions; it did not reproduce a second time",
+    "round_probabilities": [0.9947, 0.9964],
+    "round_margins": [0.1354, 0.2191],
+    "total_seconds_approx": 10.4,
+    "budget_seconds": 30,
+    "evidence_level": "loaded-only",
+    "screenshot_record": "street-snap docs/images/model-adoption.png (yellow AI-selected box)"
+  },
+  "camera_pipeline_lessons": [
+    "One ImageAnalysis use case can feed multiple synchronous consumers (rule frame sampler and a 200 ms-self-throttled luma histogram meter) on one executor, instead of opening a second analysis stream.",
+    "Analysis-frame size and contact-sheet layout change with orientation; measured model latency must be recorded per orientation/resolution, not as one number.",
+    "A 30 s wall-clock budget with honest timeout UI (keep the rule overlay, say so in the status line) is what makes a 16-40 s emulator model usable in a camera app at all."
+  ],
+  "failure_behavior": "Model absent, stale, malformed, undecided, inconsistent across rounds, or over budget: the fresh rule-based box and Chinese rule copy remain; the UI states the actual reason (timeout / comparison failed). No model-generated coordinates or copy are rendered.",
+  "open_items": [
+    "Honor Vs3 real-device latency, thermals, battery and shutter-response under full camera contention",
+    "independent labelled composition preference set; aesthetic quality stays not-verified",
+    "real-street permutation consistency and hit rate (the 70+ position sweep used the emulator virtual scene)"
+  ],
+  "honor_vs3": "not-verified",
+  "source_records": [
+    "street-snap:README.md (v0.3 notes, 0.87 -> 2.4/s)",
+    "street-snap:docs/composition-pipeline-sop.md",
+    "street-snap:docs/images/README.md (rare yellow-box adoption evidence and 1080x2340 timeout state)",
+    "street-snap commits f5d8cae, 2f45d9b, 74cbd41, 670308e"
+  ]
+}

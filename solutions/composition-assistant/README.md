@@ -72,6 +72,17 @@ A criteria-rich v1 wording — a panel-layout `state`, described options (`A: cr
 
 v1 failed non-inferiority: 9/18 → 6/18 argmax correct, 6/18 → 3/18 gate-selected correct, and the physical-panel distribution rotated from C-leaning (A5/B4/C9) to A-leaning (A13/B3/C2) — i.e. the wording moved positional bias without adding content following; P1/P2 max-prob was unchanged (0.4476 vs 0.4393). The app keeps `comp-choice-v0`; the prompt revision constant and a `prompt=` log field were kept so device evidence stays attributable. Synthetic shapes are OOD from photographs, so this run rejects the claimed improvement but says nothing positive about aesthetic quality — that still needs the independent labelled photo set. Raw data and the frozen harness: [`evaluations/d1-prompt-v1-eval-2026-10-18.json`](../../evaluations/d1-prompt-v1-eval-2026-10-18.json), [`scripts/d1-prompt-eval`](../../scripts/d1-prompt-eval/).
 
+## App integration: d1 as default ranker (2026-10-19; evidence through street-snap 10c050f)
+
+After the pin, the street-snap app shipped the two-branch pipeline for real: the rule advisor is the always-available first branch (blue box, Chinese copy), and d1-omni-600M became the default on-device second-branch ranker in commit `f5d8cae`, with SmolVLM 256M still switchable in settings. Serial inference (`2f45d9b`, `74cbd41`) and on-demand advice with guarded local ranking (`670308e`) landed around it. Raw observations: [`evaluations/app-ranker-observations-2026-10-18.json`](../../evaluations/app-ranker-observations-2026-10-18.json).
+
+- **Rule layer carries the visible product.** At a 250 ms frame clock the rule advisor runs about 2.4 analyses/s on the emulator (up from 0.87/s), with roughly 180 ms of that tick being fixed frame-grab/copy/dispatch overhead rather than advisor compute (p50 ≈ 3 ms). Its visible geometry is independently verified; the model branch never contributes coordinates.
+- **Model cadence is deliberately lazy.** One serial model pass at a time, latest-frame gate, a 3–15 s cooldown after each pass, and unchanged scenes reuse the prior result with no repeated overlay emission. The preview never waits on the model.
+- **The gate stays strict in the field sweep.** Across 70+ standing positions in both orientations d1 never produced a stable acceptance: portrait 1080×2340 (640×480 analysis) usually approached or exceeded the 30 s budget under software rendering, and landscape 540×1170 (384×288 analysis, different contact-sheet layout) finished in 16–22 s but came back UNSTABLE (the two permuted rounds disagreed) or abstained. SmolVLM 256M produced exactly one stable landscape acceptance (0.9947/0.9964, margins 0.1354/0.2191, ~10.4 s) that did not reproduce — consistent with the offline positional-bias findings, not a quality verdict either way.
+- **Degradation is honest and structural.** Model absent, stale, malformed, undecided, inconsistent, or over budget: the fresh rule box stays, and the status line names the reason (timeout / unstable comparison). A 30 s wall-clock budget with this fallback is what makes a 16–40 s software-rendered emulator model usable inside a camera app at all.
+- **One analysis stream, many consumers.** A single ImageAnalysis use case synchronously feeds both the rule frame sampler and a 200 ms-self-throttled luma histogram meter on one executor; opening a second analysis stream was unnecessary.
+- Status remains `loaded-only`. The 417.7 MiB weights are never in the default APK (explicit in-app download naming the model and LFM license); real-device latency/thermal/shutter behavior on the Honor Vs3 and aesthetic validity against an independent labelled photo set are still open.
+
 ## Reusable lessons
 
 - Preview rate and inference rate are separate budgets.
@@ -79,3 +90,6 @@ v1 failed non-inferiority: 9/18 → 6/18 argmax correct, 6/18 → 3/18 gate-sele
 - Close camera frames before model generation continues.
 - Treat a loaded model and a useful product result as different evidence levels.
 - Measure stale-result age, memory, temperature, battery, and shutter response with the complete camera pipeline.
+- Ship a fast independently-useful rule branch first; design the model branch so every failure mode (absent, slow, unstable, malformed) degrades to it silently and names itself in the UI.
+- Record model latency per orientation and analysis-stream resolution — frame size and candidate-sheet layout change when the device rotates, and a single latency number is wrong.
+- One ImageAnalysis stream can fan out to multiple synchronous consumers on a shared executor; don't pay for a second camera stream until measurement demands it.
