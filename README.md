@@ -33,29 +33,37 @@ The current composition-assistance design separates the camera preview budget fr
 
 ```text
 Camera preview: 24–30 fps
-  ├─ high-frequency branch: YOLOv11-Nano Int8, 320×320, every frame
+  ├─ high-frequency branch (target): YOLOv11-Nano Int8, 320×320, every frame
   │    → normalized subject box → sliding average → subject-follow box
-  └─ low-frequency branch: d1-omni-600M Q4 ONNX, 384×384, 1–2 fps
-       → image + English composition instruction
-       → score, problem_en, recommend_bbox
-       → static problem_en → Chinese copy
-       → bbox validation, interpolation, stale-result gate
-       → composition guide overlay
+  │    (not verified; the shipping app currently uses a pure rule layer,
+  │     FastCompositionAdvisor, which proposes crop candidates every frame)
+  └─ low-frequency branch: d1-omni-600M ONNX, 512×512 SigLIP2 NaFlex, serial
+       → A/B/C rule-proposed crops rendered onto one contact sheet + typed question
+       → single forward pass, zero generated tokens
+       → softmax over the option <mask> marker logits (choice / noul / score)
+       → margin + permutation-consistency gates map the chosen index back to a crop
+       → interpolation, stale-result gate → composition guide overlay
+       (Chinese guidance copy always comes from the rule layer, never from the model)
 ```
 
-This is the target SOP and its YOLOv11-Nano and d1-omni-600M components are still marked `not-verified` in this repository. The first runnable experiment uses the bundled SmolVLM 256M q4 ONNX artifact as a low-frequency fallback. It is `loaded-only`: the Android 35 ARM64 AVD created all three sessions, but inference took about 19–21 seconds and did not return a reliable recommendation box. The fallback proves the import, runtime, frame conversion, schema gate, and degraded UI path; it does not prove real-time quality.
+Status of the pieces:
 
-The product contract stays deliberately small and testable:
+- **d1-omni-600M is `loaded-only`** (2026-10-18): pinned at `onnx-community/d1-omni-600M-ONNX@4ebc1b9` with the 4-bit decision graph, the full vision → embeddings → decision chain runs on desktop ORT 1.22 and on an Android arm64 SDK 35 emulator against the live preview (one accepted margin-0.214 decision; one 30 s budget timeout that correctly fell back to rules). Aesthetic validity and real-device timing remain open; see [`evaluations/d1-omni-600m-pin.json`](evaluations/d1-omni-600m-pin.json).
+- **SmolVLM 256M q4 is the first `loaded-only` fallback**: the Android 35 ARM64 AVD created all three sessions, but inference took about 19–21 seconds and did not return a reliable recommendation. It proves the import, runtime, frame conversion, schema gate, and degraded UI path, not real-time quality.
+- **YOLOv11-Nano is `not-verified`**: target SOP only, no pinned artifact or device run.
+
+The decision contract is deliberately small — the model never emits JSON or coordinates:
 
 ```json
 {
-  "score": 0.0,
-  "problem_en": "subject_too_centered",
-  "recommend_bbox": {"left": 0.0, "top": 0.0, "right": 1.0, "bottom": 1.0}
+  "question_type": "choice",
+  "marker_probabilities": [0.204, 0.291, 0.505],
+  "selected_index": 2,
+  "margin": 0.214
 }
 ```
 
-Unknown labels, malformed JSON, out-of-range coordinates, stale frames, and low-confidence results are discarded. A failed low-frequency branch leaves the preview and subject-follow branch usable and shows a clear expired/no-reliable-suggestion state.
+The selected index maps to a rectangle already proposed by the rule layer. Non-finite logits, thin top-1/top-2 margins, permutation inconsistency, stale frames, timeouts, and busy-device responses are discarded. A failed low-frequency branch leaves the preview and rule overlay usable and shows a clear expired/no-reliable-suggestion state. (An early draft imagined a free-form `score` / `problem_en` / `recommend_bbox` JSON contract at 384×384; inspecting the checkpoint showed this was wrong, and that contract is documented only as history in the solution README.)
 
 ## Suggested solution record
 
@@ -106,13 +114,20 @@ Use explicit status labels in every report:
 
 ## Model and weight policy
 
-The repository keeps manifests, fixed revisions, SHA-256 values, licenses, adapters, and reproducible download or verification scripts. Large weights are included only when the upstream license, redistribution terms, storage, and provenance are clear. This repository includes the pinned SmolVLM 256M q4 bundle used for the first experiment; duplicate quantized variants remain excluded.
+The repository keeps manifests, fixed revisions, SHA-256 values, licenses, adapters, and reproducible download or verification scripts. Large weights are included only when the upstream license, redistribution terms, storage, and provenance are clear. This repository includes the pinned SmolVLM 256M q4 bundle used for the first experiment and the d1-omni-600M decision stack; duplicate quantized variants remain excluded unless a pinned variant is proven unusable (that is exactly why d1 ships `decision_q4` rather than the official 8-bit `decision_quantized` — ORT 1.22 cannot run the latter).
+
+Blobs above GitHub's 100 MiB file limit are stored with **Git LFS** (currently the two d1 external-data files; tracked in `.gitattributes`), while smaller graphs and configs follow the direct-git precedent. Cloning with LFS installed yields byte-identical files whose SHA-256 values match each model's manifest and `SHA256SUMS`.
+
+Licenses stay per-model and must travel with the weights:
+
+- **SmolVLM 256M**: Apache-2.0 (model card terms).
+- **d1-omni-600M**: **LFM Open License v1.0** — commercial use is allowed below the US$10M annual-revenue threshold, and the full license text is mandatory alongside the weights. Default app APKs must not bundle these weights silently; the install flow names the model and its license.
 
 Model records must include the source repository, revision, format, runtime, input contract, output contract, file sizes, checksums, and the devices on which the result was obtained.
 
-## First planned record
+## Pinned records
 
-The first record is the SmolVLM 256M ONNX composition-assistance experiment used by Street Snap:
+### SmolVLM 256M (first experiment)
 
 - fixed revision: `7e3e67edbbed1bf9888184d9df282b700a323964`
 - runtime format: q4 ONNX with ONNX Runtime on ARM64
@@ -121,6 +136,16 @@ The first record is the SmolVLM 256M ONNX composition-assistance experiment used
 - device status: Honor Vs3 remains unverified
 
 This record is intentionally useful even though it did not meet the real-time requirement.
+
+### d1-omni-600M (marker-choice decision ranker)
+
+- upstream checkpoint: `LiquidAI/d1-omni-600M@02b55d70`; ONNX derivative: `onnx-community/d1-omni-600M-ONNX@4ebc1b9`
+- runtime format: fp16 SigLIP2 vision tower + Q4 block-gather embeddings + 4-bit MatMulNBits decision graph, ONNX Runtime 1.22; 11 files / 417.7 MiB
+- input: one 512×512 RGB contact sheet of rule-proposed crops plus the upstream `prompt.py` choice sequence; output: softmax over three option marker logits in one forward pass — zero generated tokens, no coordinates
+- status: `loaded-only` — desktop forward passes on three synthetic sheets and one accepted live-preview decision (plus one verified timeout fallback) on an Android arm64 emulator; q4 image parity vs fp32 is not measured upstream and aesthetic validity is unproven
+- device status: Honor Vs3 remains unverified; emulator timings (vision ≈ 10–12 s, decision ≈ 4.5 s under software rendering) are not representative of phone silicon
+
+See [`models/d1-omni-600m/`](models/d1-omni-600m/) and [`evaluations/d1-omni-600m-pin.json`](evaluations/d1-omni-600m-pin.json).
 
 ## Relationship to Street Snap
 
