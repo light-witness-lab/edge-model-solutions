@@ -1,0 +1,168 @@
+{
+  "date": "2026-10-19",
+  "canvas": {
+    "advisor_internal_grid_px": 96,
+    "size_px": 96,
+    "rng": "none"
+  },
+  "suite": {
+    "frames": 204,
+    "families": {
+      "blob_grid": [
+        "MINIMAL",
+        "THIRDS"
+      ],
+      "half": [
+        "CONTRAST",
+        "HORIZON_SPLIT"
+      ],
+      "diag": [
+        "DIAGONAL",
+        "LEADING_LINES"
+      ],
+      "crowd": ["SYMMETRY"],
+      "frame_rect": ["SYMMETRY"],
+      "triangle": ["THIRDS"],
+      "hline": [
+        "HORIZON",
+        "HORIZON_SPLIT"
+      ],
+      "edge": [
+        "CONSERVATIVE",
+        "MINIMAL"
+      ],
+      "minimal": ["CONSERVATIVE"],
+      "depth": [
+        "HORIZON",
+        "THIRDS"
+      ],
+      "symmetry": [
+        "CENTERED",
+        "THIRDS"
+      ],
+      "flat": ["CONSERVATIVE"],
+      "conv": ["CENTERED"],
+      "vbars": ["VERTICAL"]
+    },
+    "blob_scan": "3 sizes (0.10/0.22/0.38) x 7x7 interior positions, contiguous order"
+  },
+  "purpose": "T37 re-runnable regression baseline for the shipped rule-layer composition advice: coverage, distribution, change rate, alignment closed-loop. Geometric synthetic frames, no model, no labelled truth.",
+  "evidence_level": "loaded-only",
+  "metric_definitions": {
+    "M3_change": "repeat pairs must never change; blob-scan adjacent-edge change rate; mean style run length over the ordered suite",
+    "M1_coverage": "distinct first-choice styles; expressed excludes CONSERVATIVE/GENERIC, denominator 19",
+    "M2_distribution": "first-choice counts, entropy normalised by ln(21), top share",
+    "M4_alignment": "obedient re-framing walk: apply planner move to blob parameters fraction=0.6 per step, budget=12 steps, success = real AlignmentTracker emits ALIGNED; eligible = first advice carries an action"
+  },
+  "results": {
+    "M3_change": {
+      "full_sequence": {
+        "rate": 0.270935960591133,
+        "edges": 203,
+        "changed": 55
+      },
+      "mean_run_length": 3.642857142857143,
+      "blob_scan": {
+        "rate": 0.2465753424657534,
+        "edges": 146,
+        "changed": 36
+      }
+    },
+    "M1_coverage": {
+      "expressed_total": 19,
+      "expressed_missing": [
+        "CONVERGENCE",
+        "EDGE_CUT",
+        "FOREGROUND_DEPTH",
+        "FRAME",
+        "NEGATIVE_SPACE",
+        "REPETITION",
+        "TOO_TIGHT",
+        "TRIANGLE",
+        "WIDE_CONTEXT"
+      ],
+      "styles_seen": [
+        "CENTERED",
+        "CONSERVATIVE",
+        "CONTRAST",
+        "DIAGONAL",
+        "HORIZON",
+        "HORIZON_SPLIT",
+        "LEADING_LINES",
+        "MINIMAL",
+        "SYMMETRY",
+        "THIRDS",
+        "VERTICAL"
+      ],
+      "expressed_seen": 10
+    },
+    "M2_distribution": {
+      "top_style_share": 0.5637254901960784,
+      "entropy_normalised": 0.4364595916769258,
+      "actionable_share": 0.8333333333333334,
+      "first_choice_counts": {
+        "NEGATIVE_SPACE": 0,
+        "CENTERED": 4,
+        "CONSERVATIVE": 6,
+        "TRIANGLE": 0,
+        "LEADING_LINES": 1,
+        "TOO_TIGHT": 0,
+        "FRAME": 0,
+        "HORIZON": 14,
+        "GENERIC": 0,
+        "SYMMETRY": 4,
+        "VERTICAL": 4,
+        "HORIZON_SPLIT": 3,
+        "REPETITION": 0,
+        "CONTRAST": 1,
+        "CONVERGENCE": 0,
+        "EDGE_CUT": 0,
+        "DIAGONAL": 1,
+        "FOREGROUND_DEPTH": 0,
+        "THIRDS": 115,
+        "MINIMAL": 51,
+        "WIDE_CONTEXT": 0
+      }
+    },
+    "repeat_pairs_changed": 0,
+    "repeat_changed_ids": [],
+    "M4_alignment": {
+      "loop_end_styles": {
+        "SYMMETRY": 126,
+        "TRIANGLE": 21
+      },
+      "median_steps_to_aligned": 11,
+      "fail_buckets": {"inset_0.03_0.10": 98},
+      "eligible": 147,
+      "success": 49,
+      "success_rate": 0.3333333333333333,
+      "walk": "step_fraction=0.6, budget=12, pan/tilt shift the mass, dolly grows it, mass kept inside the frame"
+    },
+    "median_advice_ms": 1.673584,
+    "total_frames": 204,
+    "tracker_gate_sanity": {
+      "armed_total_pulses": 1,
+      "armed_pulse_frame": 20,
+      "praise_without_need_events": 0,
+      "expected": "0, 20 (8 confirm frames after 12 unframed), 1"
+    }
+  },
+  "snapshot": {
+    "note": "verbatim snapshots; internal visibility resolves inside one Gradle module; the rest of CompositionPipelineContracts.kt is excluded (CompositionFrame sits with CameraX bindings)",
+    "files": [
+      "dev/streetsnap/camera/NormalizedBoundingBox.kt (verbatim extraction from CompositionPipelineContracts.kt)",
+      "dev/streetsnap/app/composition/FastCompositionAdvisor.kt (verbatim whole file)",
+      "dev/streetsnap/app/composition/CompositionActions.kt (verbatim whole file)",
+      "dev/streetsnap/app/composition/AlignmentFeedback.kt (verbatim whole file)",
+      "dev/streetsnap/app/composition/CompositionStyle.kt (verbatim whole file)"
+    ],
+    "source": "street-snap@e891092 (2026-10-19)"
+  },
+  "limitations": [
+    "flat geometric shapes on flat grounds are not photographs; no aesthetic judgement is measured",
+    "no model participates: the d1 gate, selection gate and scheduling are outside this harness",
+    "the re-framing walk assumes an obedient operator and exact parameter control; real camera moves overshoot",
+    "desktop JVM latency is not device latency",
+    "style coverage reflects this fixed suite only; missing styles may need other geometry or real scenes"
+  ]
+}
