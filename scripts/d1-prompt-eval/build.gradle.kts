@@ -13,5 +13,7 @@ dependencies {
 }
 
 application {
-    mainClass = "verify.MainKt"
+    // Frozen prompt probe stays the default entry; T36 selects the resolution probe via
+    // -PmainClass=verify.ResolutionProbeKt without changing the default reproduce command.
+    mainClass = (findProperty("mainClass") as String?) ?: "verify.MainKt"
 }

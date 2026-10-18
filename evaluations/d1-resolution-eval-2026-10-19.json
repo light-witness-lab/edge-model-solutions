@@ -1,0 +1,956 @@
+{
+  "date": "2026-10-19",
+  "preregistered_rule": {
+    "R4_shape": "a shape failure at lower resolution => graph-fixed-at-512 (re-export required)",
+    "R1_latency": "consider 320 only if repeat11_median(320) <= 0.70 * repeat11_median(512)",
+    "R2_accuracy": "vs 512, neither 384 nor 320 loses >2/18 argmax-correct nor >2/18 gate-selected-correct",
+    "R3_bias": "P1/P2 mean max-prob rise <= 0.05 and most-voted physical panel does not gain votes"
+  },
+  "purpose": "T36 d1 input-resolution probe (512/384/320): vision latency + v0 choice stability on the frozen 20-sheet set; exploratory for on-device speed, not aesthetic truth",
+  "verdict": {
+    "side_384": {
+      "R3_panel_pass": true,
+      "runnable": true,
+      "R2_argmax_pass": true,
+      "R3_bias_pass": true,
+      "vision_latency_ratio_vs_512": 0.4955,
+      "R1_latency_pass": true,
+      "R2_gate_pass": true,
+      "recommend_consider": false
+    },
+    "summary_320": {
+      "gate_selected_correct": 5,
+      "bias_mean_max_prob": 0.5198,
+      "physical_argmax_votes": [
+        1,
+        1,
+        10
+      ],
+      "argmax_correct": 5
+    },
+    "summary_512": {
+      "gate_selected_correct": 6,
+      "bias_mean_max_prob": 0.4477,
+      "physical_argmax_votes": [
+        2,
+        1,
+        9
+      ],
+      "argmax_correct": 6
+    },
+    "recommendation": "no-change-loaded-only",
+    "summary_384": {
+      "gate_selected_correct": 5,
+      "bias_mean_max_prob": 0.454,
+      "physical_argmax_votes": [
+        4,
+        1,
+        8
+      ],
+      "argmax_correct": 5
+    },
+    "side_320": {
+      "R3_panel_pass": false,
+      "runnable": true,
+      "R2_argmax_pass": true,
+      "R3_bias_pass": false,
+      "vision_latency_ratio_vs_512": 0.3456,
+      "R1_latency_pass": true,
+      "R2_gate_pass": true,
+      "recommend_consider": false
+    }
+  },
+  "runtime": "onnxruntime 1.22.0, desktop JVM, 4 threads, CPU; deterministic sheets independently rasterised at each side",
+  "model": "onnx-community/d1-omni-600M-ONNX@4ebc1b9 (vision_encoder_fp16 + decision_q4)",
+  "arms": [
+    {
+      "side": 512,
+      "sheets": [
+        {
+          "probs": [
+            0.4768,
+            0.3196,
+            0.2036
+          ],
+          "vision_ms": 1214,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "bias",
+          "id": "P1-uniform",
+          "good_panel": null,
+          "selected": 0
+        },
+        {
+          "probs": [
+            0.4185,
+            0.2297,
+            0.3518
+          ],
+          "vision_ms": 1314,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "bias",
+          "id": "P2-same-scene",
+          "good_panel": null,
+          "selected": null
+        },
+        {
+          "probs": [
+            0.3902,
+            0.2513,
+            0.3585
+          ],
+          "vision_ms": 1194,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s0-goodA",
+          "good_panel": "A",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.3152,
+            0.3751,
+            0.3097
+          ],
+          "vision_ms": 1212,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s0-goodB",
+          "good_panel": "B",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.1098,
+            0.281,
+            0.6092
+          ],
+          "vision_ms": 1221,
+          "gate_pass": true,
+          "correct": true,
+          "kind": "discrimination",
+          "id": "D-s0-goodC",
+          "good_panel": "C",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.2485,
+            0.4215,
+            0.33
+          ],
+          "vision_ms": 1171,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s1-goodA",
+          "good_panel": "A",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.3192,
+            0.2059,
+            0.4749
+          ],
+          "vision_ms": 1048,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s1-goodB",
+          "good_panel": "B",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.1827,
+            0.2514,
+            0.5659
+          ],
+          "vision_ms": 1182,
+          "gate_pass": true,
+          "correct": true,
+          "kind": "discrimination",
+          "id": "D-s1-goodC",
+          "good_panel": "C",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.5903,
+            0.1676,
+            0.2421
+          ],
+          "vision_ms": 1080,
+          "gate_pass": true,
+          "correct": true,
+          "kind": "discrimination",
+          "id": "D-s2-goodA",
+          "good_panel": "A",
+          "selected": 0
+        },
+        {
+          "probs": [
+            0.5908,
+            0.236,
+            0.1732
+          ],
+          "vision_ms": 1154,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s2-goodB",
+          "good_panel": "B",
+          "selected": 0
+        },
+        {
+          "probs": [
+            0.1111,
+            0.5735,
+            0.3154
+          ],
+          "vision_ms": 1229,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s2-goodC",
+          "good_panel": "C",
+          "selected": 1
+        },
+        {
+          "probs": [
+            0.4135,
+            0.195,
+            0.3915
+          ],
+          "vision_ms": 1175,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s3-goodA",
+          "good_panel": "A",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.2109,
+            0.1901,
+            0.599
+          ],
+          "vision_ms": 1437,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s3-goodB",
+          "good_panel": "B",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.3088,
+            0.1895,
+            0.5017
+          ],
+          "vision_ms": 1508,
+          "gate_pass": true,
+          "correct": true,
+          "kind": "discrimination",
+          "id": "D-s3-goodC",
+          "good_panel": "C",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.2786,
+            0.1574,
+            0.564
+          ],
+          "vision_ms": 1224,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s4-goodA",
+          "good_panel": "A",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.3432,
+            0.3269,
+            0.3299
+          ],
+          "vision_ms": 1310,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s4-goodB",
+          "good_panel": "B",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.1268,
+            0.2353,
+            0.6379
+          ],
+          "vision_ms": 1160,
+          "gate_pass": true,
+          "correct": true,
+          "kind": "discrimination",
+          "id": "D-s4-goodC",
+          "good_panel": "C",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.2485,
+            0.4215,
+            0.33
+          ],
+          "vision_ms": 1273,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s5-goodA",
+          "good_panel": "A",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.3192,
+            0.2059,
+            0.4749
+          ],
+          "vision_ms": 1203,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s5-goodB",
+          "good_panel": "B",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.1827,
+            0.2514,
+            0.5659
+          ],
+          "vision_ms": 1153,
+          "gate_pass": true,
+          "correct": true,
+          "kind": "discrimination",
+          "id": "D-s5-goodC",
+          "good_panel": "C",
+          "selected": 2
+        }
+      ],
+      "vision_ms": {
+        "repeat11_median": 1227,
+        "per_sheet_median": 1212,
+        "repeat11_min": 1035,
+        "per_sheet_mean": 1223
+      },
+      "grid": 32,
+      "patches": 1024,
+      "actual_prefix": 256,
+      "expected_prefix": 256,
+      "status": "ok"
+    },
+    {
+      "side": 384,
+      "sheets": [
+        {
+          "probs": [
+            0.4504,
+            0.2913,
+            0.2583
+          ],
+          "vision_ms": 691,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "bias",
+          "id": "P1-uniform",
+          "good_panel": null,
+          "selected": 0
+        },
+        {
+          "probs": [
+            0.4575,
+            0.1777,
+            0.3648
+          ],
+          "vision_ms": 603,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "bias",
+          "id": "P2-same-scene",
+          "good_panel": null,
+          "selected": null
+        },
+        {
+          "probs": [
+            0.4195,
+            0.2674,
+            0.3131
+          ],
+          "vision_ms": 625,
+          "gate_pass": true,
+          "correct": true,
+          "kind": "discrimination",
+          "id": "D-s0-goodA",
+          "good_panel": "A",
+          "selected": 0
+        },
+        {
+          "probs": [
+            0.4791,
+            0.3183,
+            0.2027
+          ],
+          "vision_ms": 612,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s0-goodB",
+          "good_panel": "B",
+          "selected": 0
+        },
+        {
+          "probs": [
+            0.0999,
+            0.5569,
+            0.3432
+          ],
+          "vision_ms": 581,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s0-goodC",
+          "good_panel": "C",
+          "selected": 1
+        },
+        {
+          "probs": [
+            0.4115,
+            0.3629,
+            0.2257
+          ],
+          "vision_ms": 648,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s1-goodA",
+          "good_panel": "A",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.4516,
+            0.2308,
+            0.3176
+          ],
+          "vision_ms": 571,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s1-goodB",
+          "good_panel": "B",
+          "selected": 0
+        },
+        {
+          "probs": [
+            0.151,
+            0.2092,
+            0.6398
+          ],
+          "vision_ms": 601,
+          "gate_pass": true,
+          "correct": true,
+          "kind": "discrimination",
+          "id": "D-s1-goodC",
+          "good_panel": "C",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.3093,
+            0.2474,
+            0.4433
+          ],
+          "vision_ms": 609,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s2-goodA",
+          "good_panel": "A",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.2577,
+            0.2498,
+            0.4925
+          ],
+          "vision_ms": 666,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s2-goodB",
+          "good_panel": "B",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.1426,
+            0.3653,
+            0.4921
+          ],
+          "vision_ms": 582,
+          "gate_pass": true,
+          "correct": true,
+          "kind": "discrimination",
+          "id": "D-s2-goodC",
+          "good_panel": "C",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.2743,
+            0.2926,
+            0.4331
+          ],
+          "vision_ms": 628,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s3-goodA",
+          "good_panel": "A",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.1213,
+            0.2232,
+            0.6555
+          ],
+          "vision_ms": 622,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s3-goodB",
+          "good_panel": "B",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.3104,
+            0.2908,
+            0.3988
+          ],
+          "vision_ms": 524,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s3-goodC",
+          "good_panel": "C",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.3524,
+            0.3007,
+            0.3468
+          ],
+          "vision_ms": 566,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s4-goodA",
+          "good_panel": "A",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.3947,
+            0.3433,
+            0.262
+          ],
+          "vision_ms": 709,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s4-goodB",
+          "good_panel": "B",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.0302,
+            0.2985,
+            0.6714
+          ],
+          "vision_ms": 648,
+          "gate_pass": true,
+          "correct": true,
+          "kind": "discrimination",
+          "id": "D-s4-goodC",
+          "good_panel": "C",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.4115,
+            0.3629,
+            0.2257
+          ],
+          "vision_ms": 643,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s5-goodA",
+          "good_panel": "A",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.4516,
+            0.2308,
+            0.3176
+          ],
+          "vision_ms": 558,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s5-goodB",
+          "good_panel": "B",
+          "selected": 0
+        },
+        {
+          "probs": [
+            0.151,
+            0.2092,
+            0.6398
+          ],
+          "vision_ms": 700,
+          "gate_pass": true,
+          "correct": true,
+          "kind": "discrimination",
+          "id": "D-s5-goodC",
+          "good_panel": "C",
+          "selected": 2
+        }
+      ],
+      "vision_ms": {
+        "repeat11_median": 608,
+        "per_sheet_median": 622,
+        "repeat11_min": 503,
+        "per_sheet_mean": 619
+      },
+      "grid": 24,
+      "patches": 576,
+      "actual_prefix": 144,
+      "expected_prefix": 144,
+      "status": "ok"
+    },
+    {
+      "side": 320,
+      "sheets": [
+        {
+          "probs": [
+            0.5095,
+            0.3577,
+            0.1327
+          ],
+          "vision_ms": 475,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "bias",
+          "id": "P1-uniform",
+          "good_panel": null,
+          "selected": 0
+        },
+        {
+          "probs": [
+            0.5301,
+            0.1848,
+            0.2851
+          ],
+          "vision_ms": 445,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "bias",
+          "id": "P2-same-scene",
+          "good_panel": null,
+          "selected": 0
+        },
+        {
+          "probs": [
+            0.3103,
+            0.4187,
+            0.271
+          ],
+          "vision_ms": 387,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s0-goodA",
+          "good_panel": "A",
+          "selected": 1
+        },
+        {
+          "probs": [
+            0.426,
+            0.4306,
+            0.1434
+          ],
+          "vision_ms": 414,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s0-goodB",
+          "good_panel": "B",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.1085,
+            0.4955,
+            0.3961
+          ],
+          "vision_ms": 453,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s0-goodC",
+          "good_panel": "C",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.1517,
+            0.3486,
+            0.4997
+          ],
+          "vision_ms": 369,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s1-goodA",
+          "good_panel": "A",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.3316,
+            0.1681,
+            0.5003
+          ],
+          "vision_ms": 440,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s1-goodB",
+          "good_panel": "B",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.0912,
+            0.272,
+            0.6368
+          ],
+          "vision_ms": 476,
+          "gate_pass": true,
+          "correct": true,
+          "kind": "discrimination",
+          "id": "D-s1-goodC",
+          "good_panel": "C",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.2568,
+            0.3101,
+            0.433
+          ],
+          "vision_ms": 463,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s2-goodA",
+          "good_panel": "A",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.2376,
+            0.3552,
+            0.4071
+          ],
+          "vision_ms": 543,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s2-goodB",
+          "good_panel": "B",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.0639,
+            0.2686,
+            0.6675
+          ],
+          "vision_ms": 466,
+          "gate_pass": true,
+          "correct": true,
+          "kind": "discrimination",
+          "id": "D-s2-goodC",
+          "good_panel": "C",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.3678,
+            0.3081,
+            0.3241
+          ],
+          "vision_ms": 348,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s3-goodA",
+          "good_panel": "A",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.4686,
+            0.2241,
+            0.3073
+          ],
+          "vision_ms": 369,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s3-goodB",
+          "good_panel": "B",
+          "selected": 0
+        },
+        {
+          "probs": [
+            0.1917,
+            0.1737,
+            0.6346
+          ],
+          "vision_ms": 378,
+          "gate_pass": true,
+          "correct": true,
+          "kind": "discrimination",
+          "id": "D-s3-goodC",
+          "good_panel": "C",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.3692,
+            0.3264,
+            0.3044
+          ],
+          "vision_ms": 487,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s4-goodA",
+          "good_panel": "A",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.3088,
+            0.3475,
+            0.3438
+          ],
+          "vision_ms": 480,
+          "gate_pass": false,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s4-goodB",
+          "good_panel": "B",
+          "selected": null
+        },
+        {
+          "probs": [
+            0.0968,
+            0.1573,
+            0.7458
+          ],
+          "vision_ms": 481,
+          "gate_pass": true,
+          "correct": true,
+          "kind": "discrimination",
+          "id": "D-s4-goodC",
+          "good_panel": "C",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.1517,
+            0.3486,
+            0.4997
+          ],
+          "vision_ms": 331,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s5-goodA",
+          "good_panel": "A",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.3316,
+            0.1681,
+            0.5003
+          ],
+          "vision_ms": 514,
+          "gate_pass": true,
+          "correct": false,
+          "kind": "discrimination",
+          "id": "D-s5-goodB",
+          "good_panel": "B",
+          "selected": 2
+        },
+        {
+          "probs": [
+            0.0912,
+            0.272,
+            0.6368
+          ],
+          "vision_ms": 410,
+          "gate_pass": true,
+          "correct": true,
+          "kind": "discrimination",
+          "id": "D-s5-goodC",
+          "good_panel": "C",
+          "selected": 2
+        }
+      ],
+      "vision_ms": {
+        "repeat11_median": 424,
+        "per_sheet_median": 453,
+        "repeat11_min": 326,
+        "per_sheet_mean": 436
+      },
+      "grid": 20,
+      "patches": 400,
+      "actual_prefix": 100,
+      "expected_prefix": 100,
+      "status": "ok"
+    }
+  ],
+  "prompt": "v0 shipped wording only (comp-choice-v1 was rejected 2026-10-18)"
+}

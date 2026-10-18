@@ -56,3 +56,60 @@ wordings so results stay reproducible even if the app's `D1Prompt` changes later
 ```
 
 Deterministic on CPU: a re-run the same day produced identical per-sheet probabilities.
+
+## Resolution probe (2026-10-19, T36)
+
+`verify/ResolutionProbe.kt` reuses the frozen 20-sheet design to test whether the exported
+NaFlex vision graph genuinely accepts shorter visual sequences, and what the desktop
+latency/choice-stability trade-off looks like across three input sides:
+
+| side | grid | patches | vision prefix | repeat11 median | ratio vs 512 |
+|---|---:|---:|---:|---:|---:|
+| 512 (shipped) | 32×32 | 1024 | 256 | 1227 ms | 1.00 |
+| 384 | 24×24 | 576 | 144 | 608 ms | 0.496 |
+| 320 | 20×20 | 400 | 100 | 424 ms | 0.346 |
+
+Each side independently rasterises the same 20 sheets proportionally (16-px patch size
+unchanged), with 2 warm-ups and 11 fixed-sheet repetitions; decisions use the shipped v0
+wording only.
+
+### Pre-registered rules (set before numbers were read)
+
+- **R4 shape** — a shape failure at a lower side means the exported graph is fixed at 512
+  and would need re-export.
+- **R1 latency** — consider 320 only if its repeat11 median ≤ 0.70 × 512.
+- **R2 accuracy** — vs 512, neither 384 nor 320 may lose > 2/18 argmax-correct or
+  gate-selected-correct.
+- **R3 bias** — P1/P2 mean max-prob may rise by at most 0.05, and the most-voted physical
+  panel must not gain votes.
+
+### Result: no change (`loaded-only`)
+
+All three sides ran with the expected prefix lengths — the exported graph is variable
+length, R4 passes and no re-export is needed.
+
+| | 512 | 384 | 320 |
+|---|---:|---:|---:|
+| argmax correct | 6/18 | 5/18 (−1) | 5/18 (−1) |
+| gate-selected correct | 6/18 | 5/18 (−1) | 5/18 (−1) |
+| bias mean max-prob (P1/P2) | 0.4477 | 0.4540 (+.006) | **0.5198 (+.072)** |
+| physical-panel votes | A2 B1 C9 | A4 B1 C8 | A1 B1 **C10** |
+| R1 / R2 / R3 | — | pass / pass / pass | pass / pass / **fail** |
+
+384 clears every gate; 320 fails R3 (confidence inflation on the identical-panel probes and
+one extra vote for physical panel C), so the most aggressive side is rejected. The overall
+recommendation stays **no-change-loaded-only**: the 512 default stays. The 6/18 baseline is
+the v0 positional-responder baseline already documented above, so R2 is only a
+do-no-harm gate, not evidence of photographic judgement. Desktop CPU ratios do not
+extrapolate to device absolute latency (threads, NNAPI, bandwidth all differ), and the app
+side cannot run d1 inside budget at all today, so whether 384 would actually close the
+on-device gap is unknown. Switching the app's visual input size is an app-contract change
+(`D1NaFlex` snapshot plus model config/manifest) and needs a separate, device-measured
+task; this probe deliberately changed no app contract.
+
+```sh
+./gradlew run --offline -PmainClass=verify.ResolutionProbeKt \
+  --args="/path/to/models/d1-omni-600m /tmp/resolution-eval.json"
+```
+
+Evidence: [`evaluations/d1-resolution-eval-2026-10-19.json`](../../evaluations/d1-resolution-eval-2026-10-19.json).
