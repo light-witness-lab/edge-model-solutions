@@ -1,0 +1,403 @@
+{
+  "date": "2026-10-18",
+  "summary": {
+    "gate_selected_correct": "5/18",
+    "bias_mean_max_prob": 0.407,
+    "correct_by_style": {
+      "SYMMETRY": 0,
+      "VERTICAL": 1,
+      "REPETITION": 1,
+      "CONVERGENCE": 1,
+      "CONTRAST": 2,
+      "HORIZON": 0
+    },
+    "correct_by_good_panel_position": {
+      "A": 4,
+      "B": 0,
+      "C": 1
+    },
+    "argmax_position_distribution": {
+      "A": 9,
+      "B": 0,
+      "C": 1
+    },
+    "argmax_correct": "5/18"
+  },
+  "mean_ms_per_sheet": 1628,
+  "sheets": [
+    {
+      "decision": {
+        "probs": [
+          0.2854,
+          0.3076,
+          0.407
+        ],
+        "margin": 0.0994,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "kind": "bias",
+      "style": null,
+      "id": "P1-uniform",
+      "good_panel": null
+    },
+    {
+      "decision": {
+        "probs": [
+          0.2854,
+          0.3076,
+          0.407
+        ],
+        "margin": 0.0994,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "kind": "bias",
+      "style": null,
+      "id": "P2-same-crop",
+      "good_panel": null
+    },
+    {
+      "decision": {
+        "probs": [
+          0.3431,
+          0.3398,
+          0.3171
+        ],
+        "margin": 0.0033,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "kind": "discrimination",
+      "style": "SYMMETRY",
+      "id": "D-SYMMETRY-goodA",
+      "good_panel": "A"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.3203,
+          0.3146,
+          0.365
+        ],
+        "margin": 0.0447,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "kind": "discrimination",
+      "style": "SYMMETRY",
+      "id": "D-SYMMETRY-goodB",
+      "good_panel": "B"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.2679,
+          0.3257,
+          0.4063
+        ],
+        "margin": 0.0806,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "kind": "discrimination",
+      "style": "SYMMETRY",
+      "id": "D-SYMMETRY-goodC",
+      "good_panel": "C"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.3362,
+          0.2692,
+          0.3945
+        ],
+        "margin": 0.0583,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "kind": "discrimination",
+      "style": "HORIZON",
+      "id": "D-HORIZON-goodA",
+      "good_panel": "A"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.3309,
+          0.2515,
+          0.4175
+        ],
+        "margin": 0.0866,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "kind": "discrimination",
+      "style": "HORIZON",
+      "id": "D-HORIZON-goodB",
+      "good_panel": "B"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.3352,
+          0.3926,
+          0.2722
+        ],
+        "margin": 0.0575,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "kind": "discrimination",
+      "style": "HORIZON",
+      "id": "D-HORIZON-goodC",
+      "good_panel": "C"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.533,
+          0.2007,
+          0.2662
+        ],
+        "margin": 0.2668,
+        "gate_pass": true,
+        "correct": true,
+        "text_tokens": 35,
+        "selected": 0
+      },
+      "kind": "discrimination",
+      "style": "REPETITION",
+      "id": "D-REPETITION-goodA",
+      "good_panel": "A"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.4535,
+          0.2413,
+          0.3052
+        ],
+        "margin": 0.1483,
+        "gate_pass": true,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": 0
+      },
+      "kind": "discrimination",
+      "style": "REPETITION",
+      "id": "D-REPETITION-goodB",
+      "good_panel": "B"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.3726,
+          0.277,
+          0.3504
+        ],
+        "margin": 0.0222,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "kind": "discrimination",
+      "style": "REPETITION",
+      "id": "D-REPETITION-goodC",
+      "good_panel": "C"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.4455,
+          0.2904,
+          0.2641
+        ],
+        "margin": 0.155,
+        "gate_pass": true,
+        "correct": true,
+        "text_tokens": 35,
+        "selected": 0
+      },
+      "kind": "discrimination",
+      "style": "VERTICAL",
+      "id": "D-VERTICAL-goodA",
+      "good_panel": "A"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.452,
+          0.2734,
+          0.2747
+        ],
+        "margin": 0.1773,
+        "gate_pass": true,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": 0
+      },
+      "kind": "discrimination",
+      "style": "VERTICAL",
+      "id": "D-VERTICAL-goodB",
+      "good_panel": "B"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.3676,
+          0.2922,
+          0.3402
+        ],
+        "margin": 0.0274,
+        "gate_pass": false,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": null
+      },
+      "kind": "discrimination",
+      "style": "VERTICAL",
+      "id": "D-VERTICAL-goodC",
+      "good_panel": "C"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.6022,
+          0.1478,
+          0.2501
+        ],
+        "margin": 0.3521,
+        "gate_pass": true,
+        "correct": true,
+        "text_tokens": 35,
+        "selected": 0
+      },
+      "kind": "discrimination",
+      "style": "CONVERGENCE",
+      "id": "D-CONVERGENCE-goodA",
+      "good_panel": "A"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.518,
+          0.207,
+          0.2751
+        ],
+        "margin": 0.2429,
+        "gate_pass": true,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": 0
+      },
+      "kind": "discrimination",
+      "style": "CONVERGENCE",
+      "id": "D-CONVERGENCE-goodB",
+      "good_panel": "B"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.4552,
+          0.2335,
+          0.3113
+        ],
+        "margin": 0.1439,
+        "gate_pass": true,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": 0
+      },
+      "kind": "discrimination",
+      "style": "CONVERGENCE",
+      "id": "D-CONVERGENCE-goodC",
+      "good_panel": "C"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.6541,
+          0.1695,
+          0.1764
+        ],
+        "margin": 0.4777,
+        "gate_pass": true,
+        "correct": true,
+        "text_tokens": 35,
+        "selected": 0
+      },
+      "kind": "discrimination",
+      "style": "CONTRAST",
+      "id": "D-CONTRAST-goodA",
+      "good_panel": "A"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.4679,
+          0.2039,
+          0.3282
+        ],
+        "margin": 0.1397,
+        "gate_pass": true,
+        "correct": false,
+        "text_tokens": 35,
+        "selected": 0
+      },
+      "kind": "discrimination",
+      "style": "CONTRAST",
+      "id": "D-CONTRAST-goodB",
+      "good_panel": "B"
+    },
+    {
+      "decision": {
+        "probs": [
+          0.2112,
+          0.2048,
+          0.584
+        ],
+        "margin": 0.3728,
+        "gate_pass": true,
+        "correct": true,
+        "text_tokens": 35,
+        "selected": 2
+      },
+      "kind": "discrimination",
+      "style": "CONTRAST",
+      "id": "D-CONTRAST-goodC",
+      "good_panel": "C"
+    }
+  ],
+  "purpose": "T10 candidate-diversity probe: does d1 follow composition grammar when the three crops of one frame carry different styles (style-seed injection)",
+  "decision_rule": "argmax correct >=12/18 = content following; ~9/18 with bias max-prob >=0.40 = positional responder, style seeding is diversity-only and the 0.10 gate stays; <4/18 between style groups = no observable difference",
+  "runtime": "onnxruntime 1.22.0, desktop JVM, 4 threads",
+  "model": "onnx-community/d1-omni-600M-ONNX@4ebc1b9 (decision_q4)",
+  "prompt": {
+    "question": "Which crop gives the best composition?",
+    "options": [
+      "a: crop option A",
+      "b: crop option B",
+      "c: crop option C"
+    ],
+    "state": "",
+    "version": "comp-choice-v0"
+  }
+}
