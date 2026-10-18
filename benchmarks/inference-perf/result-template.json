@@ -1,0 +1,91 @@
+{
+  "schema": "inference-perf/v1",
+  "solution": "composition-assistant",
+  "run_id": "YYYY-MM-DD-runtime-device-workload",
+  "date": "YYYY-MM-DD",
+  "evidence_level": "not-verified",
+  "model": {
+    "id": "d1-omni-600m | smolvlm-256m | ...",
+    "revision": "<immutable upstream revision>",
+    "format": "onnx | gguf | ...",
+    "quantization": "fp16 | int8 | q4-matmulnbits",
+    "params_m": null,
+    "context_tokens": null,
+    "kv_quantization": "fp16 | int8 | int4 | n/a"
+  },
+  "runtime": {
+    "name": "onnxruntime | tflite | mnn | ncnn | executorch | mediapipe-llm | llama.cpp",
+    "version": "1.22.0",
+    "execution_provider": "cpu | xnnpack | nnapi | qnn | gpu",
+    "threads": 4,
+    "affinity": "all | big-cores | little-cores",
+    "intra_op_threads": 4
+  },
+  "device": {
+    "name": "desktop-jvm | Android35-AVD | Honor-Vs3 | ...",
+    "soc": "e.g. Snapdragon / Dimensity / Apple A",
+    "os": "Android 15 (API 35)",
+    "ram_gb": null,
+    "backend": "CPU | GPU | NPU",
+    "renderer": "hardware | qemu-software",
+    "thermal_state_start": "none",
+    "thermal_state_end": "none",
+    "battery_pct_start": null,
+    "battery_pct_end": null
+  },
+  "workload": {
+    "id": "W1-decision | W2-vlm-choice | W3-continuous-scan",
+    "fixture": "20 deterministic contact sheets (see scripts/d1-prompt-eval) | labelled photo set (pending)",
+    "vision_resolution": "512x512",
+    "analysis_resolution": "288x384 | 384x288",
+    "prompt_tokens": null,
+    "prefix_constant": true,
+    "prefix_or_vision_shared": false,
+    "generated_tokens": 0,
+    "target_calls_per_sec": 2.4,
+    "budget_ms": 30000
+  },
+  "policy": {
+    "warmup_iters": 3,
+    "measured_iters": 20,
+    "single_concurrency": true,
+    "deterministic_cpu": true
+  },
+  "segments_ms": {
+    "vision_encode": {"p50": null, "p95": null, "min": null, "max": null, "mean": null},
+    "prompt_embed": {"p50": null, "p95": null, "min": null, "max": null, "mean": null},
+    "decision_or_prefill": {"p50": null, "p95": null, "min": null, "max": null, "mean": null},
+    "decode_per_token": {"p50": null, "p95": null, "min": null, "max": null, "mean": null},
+    "end_to_end_round": {"p50": null, "p95": null, "min": null, "max": null, "mean": null}
+  },
+  "prefix_reuse_ms": {
+    "cold_full_prefill": null,
+    "shared_vision_or_prefix": null,
+    "saved_fraction": null
+  },
+  "throughput": {
+    "rounds_per_sec": null,
+    "tokens_per_sec_decode": null,
+    "preview_fps": null
+  },
+  "resources": {
+    "memory_peak_mb": null,
+    "cpu_percent": null,
+    "dropped_frames": null,
+    "frame_age_ms_p95": null
+  },
+  "output_validity": {
+    "valid_rate": null,
+    "gate_returned": 0,
+    "gate_unstable": 0,
+    "gate_no_result": 0,
+    "timeouts": 0,
+    "margin_p50": null
+  },
+  "notes": "Single-run timings must be labeled as such. AVD software-render timings are not phone results; see docs/research/.",
+  "source": {
+    "street_snap_commit": null,
+    "harness": "scripts/inf-perf-bench",
+    "raw_report": "reports/local/ (gitignored)"
+  }
+}

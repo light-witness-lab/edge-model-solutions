@@ -65,6 +65,20 @@ The decision contract is deliberately small — the model never emits JSON or co
 
 The selected index maps to a rectangle already proposed by the rule layer. Non-finite logits, thin top-1/top-2 margins, permutation inconsistency, stale frames, timeouts, and busy-device responses are discarded. A failed low-frequency branch leaves the preview and rule overlay usable and shows a clear expired/no-reliable-suggestion state. (An early draft imagined a free-form `score` / `problem_en` / `recommend_bbox` JSON contract at 384×384; inspecting the checkpoint showed this was wrong, and that contract is documented only as history in the solution README.)
 
+## Research line: on-device inference performance
+
+> 这里是「技术人员的小天地」：不追新模型，不喊「端侧大模型」口号，只把一件事拆开量清楚——手机这条推理链路上，时间到底花在哪、哪些云端技巧在单芯片上根本不成立、热起来之后还剩多少。
+>
+> A technicians' corner rather than a marketing track: no new checkpoints, no "on-device LLM" slogans — just the inference path taken apart and measured, cloud techniques stress-tested against single-die reality, and thermal steady state treated as the real operating point.
+
+The composition stack runs gated decisions at 1–3 per second today; the north star is content-adaptive understanding over a continuously analyzing viewfinder. Closing that gap is an engineering research line, not a model swap, so it is tracked here with the same evidence discipline as a solution record. Three questions structure it:
+
+1. **Runtime landscape** — operator coverage, latency, binary size, threading and NNAPI/NPU support across ONNX Runtime, MNN, NCNN, ExecuTorch, LiteRT, MediaPipe LLM and llama.cpp, and which runtime fits which model role. Notes: [`docs/research/01-runtime-survey.md`](docs/research/01-runtime-survey.md).
+2. **KV and prefix caching on phones** — what the vision prefix and fixed question let us cache, how A/B/C candidates should fan out from one shared prefix, which KV techniques are wasted at 256–600M scale, and why adjacent frames cannot share KV directly. Notes: [`docs/research/02-kv-and-prefix-caching.md`](docs/research/02-kv-and-prefix-caching.md).
+3. **Prefill/decode disaggregation on-device** — whether cloud P/D separation survives one SoC with unified memory (short answer for our zero-token workload: effectively no), and what its real on-device avatars are — phase-aware NPU mapping, inter-frame reuse, a resident sentinel tier. Notes: [`docs/research/03-prefill-decode-disaggregation.md`](docs/research/03-prefill-decode-disaggregation.md).
+
+The notes are external research with tiered sources (peer-reviewed → vendor docs → preprints → blogs); they are **not** device evidence and never use the `verified` / `loaded-only` labels. Claims turn into evidence only through the executable protocol in [`benchmarks/inference-perf`](benchmarks/inference-perf/) — segmented p50/p95 latency, W1 decision / W2 VLM-choice / W3 continuous-scan workloads, an explicit variable matrix, cold-vs-hot and sustained-thermal runs, gate outcomes recorded beside timing — with a runnable Kotlin/JVM skeleton in [`scripts/inf-perf-bench`](scripts/inf-perf-bench/) (self-check pipeline and d1 graph-load probe verified on desktop JVM 2026-10-18; all model/device numbers stay `not-verified` until measured on named hardware).
+
 ## Suggested solution record
 
 Every solution should answer:
