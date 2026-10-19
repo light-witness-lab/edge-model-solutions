@@ -7,6 +7,7 @@ import dev.streetsnap.app.composition.CompositionActions
 import dev.streetsnap.app.composition.CompositionCandidate
 import dev.streetsnap.app.composition.CompositionStyle
 import dev.streetsnap.app.composition.FastCompositionAdvisor
+import dev.streetsnap.app.composition.FrameGuidance
 import dev.streetsnap.app.composition.MoveDirection
 import org.json.JSONArray
 import org.json.JSONObject
@@ -41,9 +42,12 @@ import kotlin.math.max
  * truth (loaded-only).
  */
 
-private const val SNAPSHOT_SOURCE = "street-snap@e891092 (2026-10-19)"
+private const val SNAPSHOT_SOURCE = "street-snap@ee8d53c + T40 alignment rework (2026-10-19)"
 private const val STEP_FRACTION = 0.60
-private const val LOOP_BUDGET = 12
+// T40: 12 steps could hold the geometric walk but not the walk plus the 5-frame (~1.25 s)
+// confirmation window the real AlignmentTracker requires; small subjects enter the band
+// around step 9-10 and then had only 3 frames left. 16 frames = 4 s of obedient re-framing.
+private const val LOOP_BUDGET = 16
 
 private data class Frame(
     val sceneId: String, val family: String, val style: CompositionStyle,
@@ -139,12 +143,18 @@ fun main(args: Array<String>) {
         for (step in 1..LOOP_BUDGET) {
             val top = advise(SyntheticScenes.Blob(cx, cy, size, start.ground, start.content))
             val inset = maxInset(top)
-            val framed = AlignmentFeedback.isFramed(top.crop, top.style)
-            if (tracker.observe(framed, top.action != null) == AlignmentEvent.ALIGNED) {
+            // T40: alignment is "the asked-for move is satisfied" (centred, scale >= 0.88),
+            // not an exact full frame — the 0.92 crop band (4 % inset) used to never confirm.
+            val guidance = AlignmentFeedback.guidanceFor(top.crop, top.style)
+            if (tracker.observe(guidance) == AlignmentEvent.ALIGNED) {
                 outcome = LoopOutcome(scene.id, true, step, top.style.name, inset,
                     top.style in CompositionActions.ACTION_BUILT_IN)
                 break
             }
+            // Already in the alignment band but still accumulating confirmation frames: a
+            // real user holds the camera still, so do not keep applying moves (which would
+            // grow the mass past the band and reset the streak).
+            if (guidance == FrameGuidance.ALIGNED) continue
             // Apply the planner's move to the scene parameters: a right/up crop offset means
             // the content shifts opposite in the new frame; FORWARD grows the mass.
             val move = CompositionActions.plan(top.crop, top.style,
@@ -191,16 +201,16 @@ fun main(args: Array<String>) {
     // ---- tracker gate sanity: praise without a prior need must never fire ----
     val noPraise = AlignmentTracker().run {
         var events = 0
-        repeat(12) { if (observe(true, false) == AlignmentEvent.ALIGNED) events++ }
+        repeat(12) { if (observe(FrameGuidance.ALIGNED) == AlignmentEvent.ALIGNED) events++ }
         events
     }
     var armedPulseAt = -1
     var armedPulses = 0
     run {
         val t = AlignmentTracker()
-        repeat(12) { t.observe(false, true) }
+        repeat(12) { t.observe(FrameGuidance.NEEDS_MOVE) }
         for (f in 1..12) {
-            if (t.observe(true, true) == AlignmentEvent.ALIGNED) {
+            if (t.observe(FrameGuidance.ALIGNED) == AlignmentEvent.ALIGNED) {
                 armedPulses++
                 if (armedPulseAt < 0) armedPulseAt = 12 + f
             }
@@ -280,7 +290,7 @@ fun main(args: Array<String>) {
             .put("praise_without_need_events", noPraise)
             .put("armed_pulse_frame", armedPulseAt)
             .put("armed_total_pulses", armedPulses)
-            .put("expected", "0, 20 (8 confirm frames after 12 unframed), 1")))
+            .put("expected", "0, 17 (5 confirm frames after 12 needing), 1")))
     root.put("limitations", JSONArray(listOf(
         "flat geometric shapes on flat grounds are not photographs; no aesthetic judgement is measured",
         "no model participates: the d1 gate, selection gate and scheduling are outside this harness",
