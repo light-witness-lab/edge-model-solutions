@@ -49,7 +49,7 @@ Camera preview: 24–30 fps
 Status of the pieces:
 
 - **d1-omni-600M is `loaded-only`** (2026-10-18): pinned at `onnx-community/d1-omni-600M-ONNX@4ebc1b9` with the 4-bit decision graph, the full vision → embeddings → decision chain runs on desktop ORT 1.22 and on an Android arm64 SDK 35 emulator against the live preview (one accepted margin-0.214 decision; one 30 s budget timeout that correctly fell back to rules). Aesthetic validity and real-device timing remain open; see [`evaluations/d1-omni-600m-pin.json`](evaluations/d1-omni-600m-pin.json).
-- **SmolVLM 256M q4 is the first `loaded-only` fallback**: the Android 35 ARM64 AVD created all three sessions, but inference took about 19–21 seconds and did not return a reliable recommendation. It proves the import, runtime, frame conversion, schema gate, and degraded UI path, not real-time quality.
+- **SmolVLM 256M q4 was the first `loaded-only` experiment**: the Android 35 ARM64 AVD created all three sessions, but inference took about 19–21 seconds and did not return a reliable recommendation. It proved the import, runtime, frame conversion, schema gate, and degraded UI path, not real-time quality. It was retired from the street-snap catalog on 2026-10-20 (the checked-in bundle stays as the first experiment/failure record); d1-omni-600M is now the only shipping ranker.
 - **YOLOv11-Nano is `not-verified`**: target SOP only, no pinned artifact or device run.
 
 The decision contract is deliberately small — the model never emits JSON or coordinates:
@@ -109,6 +109,7 @@ Example solution areas:
 ```text
 solutions/
   composition-assistant/
+  pose-assistant/
   subject-detection/
   animal-recognition/
   bird-eye/

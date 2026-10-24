@@ -1,17 +1,18 @@
 # Cross-project evolution contract
 
-`street-snap` and `edge-model-solutions` are one engineering effort with two different responsibilities. Keeping the boundary explicit lets the app iterate quickly while the organization retains reusable evidence.
+`street-snap`, `edge-model-solutions` and `inference-engineering` are one engineering effort with three different responsibilities. Keeping the boundaries explicit lets the app iterate quickly, the organization retain reusable evidence, and runtime engineering knowledge stay decoupled from any single app. See [three-repository-map.md](three-repository-map.md) for the one-page map.
 
 ## Ownership
 
-| Concern | `street-snap` | `edge-model-solutions` |
-| --- | --- | --- |
-| Camera preview, shutter, AF/MF, P/S/M, orientation, UI | source of truth | link to the app evidence |
-| Frame sampling, latest-only backpressure, coordinate transforms | source of truth | reusable SOP and contract |
-| Model adapters and app integration | source of truth | adapter notes and compatibility matrix |
-| Model weights and provenance | external staging or explicit app bundle | manifest, license notice, SHA-256, selected artifact |
-| Latency, memory, thermal and output validity | raw device run and APK evidence | normalized evaluation record |
-| APKs, signing material, private photos, local task queue | stays local to the app project | never copy in |
+| Concern | `street-snap` | `edge-model-solutions` | `inference-engineering` |
+| --- | --- | --- | --- |
+| Camera preview, shutter, AF/MF, P/S/M, orientation, UI | source of truth | link to the app evidence | — |
+| Frame sampling, latest-only backpressure, coordinate transforms | source of truth | reusable SOP and contract | portable playbook items distilled from shipped code |
+| Model adapters and app integration | source of truth | adapter notes and compatibility matrix | runtime/quantization/scheduling research, no app code |
+| Model weights and provenance | download by pinned revision; never commit weights | manifest, license notice, SHA-256, selected artifact | references pinned artifacts by repo link, never hosts them |
+| Latency, memory, thermal and output validity | raw device run and APK evidence | normalized evaluation record | methodology and evidence-label discipline |
+| Frozen pipeline baselines | the shipped commit being frozen | evaluation JSON for the same point | dated frozen-baseline document (amendments only) |
+| APKs, signing material, private photos, local task queue | stays local to the app project | never copy in | never copy in |
 
 ## Sync record
 
@@ -28,7 +29,17 @@ The evidence level describes the result, not the ambition: `verified`, `loaded-o
 
 ## Current handoff
 
-The current Street Snap composition branch is source commit `670308e` (`feat/dual-branch-composition`). It uses a rules-first candidate generator and an optional SmolVLM 256M local comparison. The app has shown a valid content-related guide box, while the model's aesthetic selection remains unverified. The model matrix records the target YOLO/d1 split separately so a future adapter or benchmark does not silently rewrite this result.
+The current Street Snap mainline is org commit `49123ad` (2026-10-24, PR #6; fork main `f83f2e5`). It ships the rules-first candidate generator (~2.4 analyses/s at a 250 ms frame clock on the AVD; 21 composition vocabularies, action sentences, alignment green-frame feedback and a move arrow) as the always-available first branch, with **d1-omni-600M as the only model ranker** (marker-choice contract, single forward, zero generated tokens) since the SmolVLM 256M/500M catalog removal on 2026-10-20. A MediaPipe pose landmarker is the second on-device inference path (demo mode without the model). The inference v1 pipeline is frozen as a baseline in `inference-engineering/docs/on-device-composition-pipeline-v1.md` (source baseline street-snap `f809fc2`); later changes go in as dated amendments, never by rewriting the freeze. The high-frequency YOLOv11-Nano subject branch remains `not-verified` with contracts reserved in the camera module but no wiring.
+
+2026-10-25 (fork `5cf1738`, org PR pending): the pose path gains visibility-gated One-Euro landmark filtering, bone-length target retargeting and a single-ear head-pose fallback; evidence is `experimental` synthetic-geometry JVM probes only (`evaluations/pose-assistant-geometric-probe-2026-10-25.json`), and pose skeleton fit on real subjects stays `not-verified`.
+
+Evidence remains `loaded-only` at best: the d1 gate never stably accepted across 70+ AVD positions (one margin-0.214 acceptance + one timeout in the pin record), and Honor Vs3 real-device timing, thermal behavior, pose skeleton fit and aesthetic quality are all `not-verified`.
+
+## Linking convention
+
+- App → solutions/evaluations: street-snap docs cite files in this repo at the commit recorded in the evaluation record.
+- This repo → app: every `evaluations/` entry records the exact street-snap source commit (and APK digest when relevant).
+- `inference-engineering` freezes baselines at named street-snap commits and links back; its case study and playbook must not invent numbers absent from this repo's records or the app SOP.
 
 ## What must not be inferred
 

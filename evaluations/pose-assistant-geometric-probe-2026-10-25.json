@@ -1,0 +1,47 @@
+{
+  "solution": "pose-assistant",
+  "model": "pose_landmarker_lite",
+  "model_revision": "mediapipe-models/pose_landmarker_lite/float16/latest",
+  "model_bytes": 5777746,
+  "model_sha256": "59929e1d1ee95287735ddd833b19cf4ac46d29bc7afddbbf6753c459690d574a",
+  "runtime": "com.google.mediapipe:tasks-vision:1.1.1, PoseLandmarker LIVE_STREAM, CPU delegate, numPoses=1, detection/presence/tracking confidence 0.5",
+  "street_snap_commit": "5cf1738d83afbf75711a44547591a30dfcb24932",
+  "commit_note": "fork main 2026-10-25, org PR pending; org main was 49123ad before this change",
+  "device": {
+    "name": "JVM unit tests on synthetic skeletons",
+    "backend": "no inference — geometry/filter logic only"
+  },
+  "status": "experimental",
+  "probe": {
+    "type": "constructive geometric property tests",
+    "classes": [
+      "PoseSmootherTest (8): first-frame passthrough, static jitter attenuated below 0.005 normalised units, bounded tracking lag after a fast 0.6-unit jump, occlusion hold within 350 ms, point drop past 350 ms, instant reacquire past 1000 ms, reset clears held points, backwards clock resets without spikes/NaN",
+      "PoseProjectionTest (8): shoulders/hips pinned exactly, neutral-proportion body reconstructed within 0.005, visible limbs use observed bone lengths with template directions, hidden elbow falls back to similarity projection, hidden wrist keeps chain at template segment length, head uses observed nose-to-shoulder distance, missing torso returns null, all eight catalogue poses project",
+      "PoseCoachTest additions (3): single-ear look-back and chin-up still score via the 0.40 head/shoulder-width fallback; neither ear visible reports the face-hidden hint"
+    ],
+    "smoother_parameters": {
+      "filter": "one-euro per joint x/y",
+      "min_cutoff_hz": 1.0,
+      "beta": 0.8,
+      "derivative_cutoff_hz": 1.0,
+      "occlusion_hold_ms": 350,
+      "reacquire_ms": 1000
+    },
+    "coach_parameters": {
+      "ready_score": 0.75,
+      "drop_score": 0.60,
+      "hold_frames": 4,
+      "rearm_frames": 3,
+      "presence_grace_ms": 350,
+      "min_visible_points_for_person": 8,
+      "single_ear_head_width_ratio": 0.40
+    }
+  },
+  "output": {
+    "photographic_accuracy_claimed": false,
+    "real_subject_tested": false
+  },
+  "failure_behavior": "empty/near-empty results clear only after the 350 ms grace; occluded joints hold then drop; long-gap reappearance adopts instantly; demo mode when model absent or graph construction fails",
+  "honor_vs3": "not-verified",
+  "open": "real-subject skeleton fit and pixel accuracy, filter/head-ratio calibration, coaching effectiveness, lite cadence and thermals (T90 device pass and T91 labelled photo set)"
+}

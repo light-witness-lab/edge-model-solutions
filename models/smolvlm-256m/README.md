@@ -9,7 +9,7 @@ This is the first pinned model artifact in `edge-model-solutions`. It is include
 - Included runtime files: 7
 - Total: `182,318,056` bytes (`173.9 MiB`)
 - Local validation: Android 35 ARM64 AVD can import the bundle and create vision, embedding, and decoder sessions.
-- Product status: `loaded-only`; AVD inference took approximately 19–21 seconds and did not produce a reliable composition box.
+- Product status: `loaded-only`; AVD inference took approximately 19–21 seconds and did not produce a reliable composition box. **Retired from the street-snap app catalog on 2026-10-20** (kept here as the first experiment/failure artifact; d1-omni-600M is the only shipping ranker).
 - Honor Vs3: not verified.
 
 The repository intentionally includes only the selected q4 files used by the experiment. q4f16, generic quantized, cache, and duplicate export variants are not included.
