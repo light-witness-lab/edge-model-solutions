@@ -6,7 +6,7 @@
   "model": "pose_landmarker_lite",
   "model_sha256": "59929e1d1ee95287735ddd833b19cf4ac46d29bc7afddbbf6753c459690d574a",
   "runtime": "com.google.mediapipe:tasks-vision:1.1.1, PoseLandmarker LIVE_STREAM, CPU, numPoses=1, confidences 0.5",
-  "street_snap_commit": "T115 batch on bestksl fork main (5993918 fetch-depth fix is the prior commit); merge SHA backfilled after the PR merges",
+  "street_snap_commit": "merged to org main as 543784cbe3144ef06c2ca3dc54504a67bf40aac6 via PR #11 (head a23047e; batch commits baa0efa dual-figure+12 poses, bc28bc7 portrait card-overlap lift, b3f7a50 screenshot recapture docs, a23047e CI compile fix); CI build success",
   "device": {
     "name": "JVM unit tests on synthetic skeletons",
     "backend": "no inference — geometry/filter/UI-contract logic only"

@@ -15,7 +15,7 @@ was built and why" record after the T108–T115 iteration batch. Evidence level 
 | T110 | Single-ear robustness for look-back / chin-up proxies |
 | T113 | Rolling `dev` pre-release CD: every main merge publishes stable-name debug APKs to the Releases page |
 | T114 | Push → PR → CI-gated merge automation via scoped fine-grained PATs |
-| T115 | Two-figure visual separation, joint-level pulse guidance, 12-pose catalogue, asset libraries |
+| T115 | Two-figure visual separation, joint-level pulse guidance, 12-pose catalogue, portrait card-overlap lift, asset libraries (street-snap PR #11, merge `543784c`, CI green) |
 
 ## Stack pin
 
@@ -71,6 +71,13 @@ was built and why" record after the T108–T115 iteration batch. Evidence level 
   "- " aborted the first CD run after a fully successful build. Replaced with one heredoc.
 - `actions/checkout` defaults to fetch-depth 1; "last 10 commits" listed one line.
 - Co-located figures shipped with no visual grammar (T115 fix above).
+- No local JDK means CI is the only compile gate: it caught one error that adversarial
+  static review missed — `maxWidth`/`maxHeight` of an outer `BoxWithConstraintsScope` are
+  inaccessible by implicit receiver inside a nested `BoxScope` (Compose layout scopes carry
+  a DSL marker); use the enclosing composable's `landscape` flag instead.
+- Polling automation must pin the head SHA: pushing twice while a check is running cancels
+  the old run mid-flight; a "follow PR head" loop observing the cancellation can mistake it
+  for the final verdict if it does not pin the revision it intends to merge.
 
 ## What is still not claimed
 

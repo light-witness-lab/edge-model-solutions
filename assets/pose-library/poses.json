@@ -5,7 +5,7 @@
   "app_source": {
     "repository": "light-witness-lab/street-snap",
     "file": "app/src/main/java/dev/streetsnap/app/pose/PoseCatalog.kt",
-    "sync_status": "T115 twelve-pose batch; merge SHA backfilled after the street-snap PR merges",
+    "sync_status": "synced at street-snap merge 543784cbe3144ef06c2ca3dc54504a67bf40aac6 (PR #11, 2026-10-25): 12 poses match PoseCatalog.kt",
     "evidence": "experimental — synthetic-geometry JVM probes only; real-subject coaching effectiveness not-verified (T90/T91)"
   },
   "coordinate_notes": {
