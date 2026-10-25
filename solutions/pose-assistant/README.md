@@ -4,6 +4,10 @@ Status: `experimental` — geometric coaching logic proven by JVM tests on synth
 skeletons; fit, robustness and coaching effectiveness on photographed subjects are
 `not-verified` (blocked on the Honor Vs3 real-device pass, T90).
 
+> Implementation retrospective (T108–T115, CD/automation architecture, failure log):
+> [implementation-notes-2026-10-25.md](implementation-notes-2026-10-25.md).
+> Portable pose catalogue and classic composition patterns: [`../../assets/`](../../assets/README.md).
+
 This solution turns a live camera frame of one person into a pose-coaching overlay: a
 detected stick figure that hugs the body, an amber target figure retargeted onto that
 same body, and joint-level Chinese nudges. It is a **teaching surface only**: it never
@@ -34,7 +38,8 @@ CameraX ImageAnalysis (shared stream)
   → 33 normalized landmarks + visibility
   → PoseSmoother (T108): one One-Euro filter per joint, visibility-gated
   → PoseCoach (pure Kotlin): person gate → per-pose conditions → hysteresis
-  → PoseOverlay: white detected skeleton + amber retargeted target + hint card
+  → PoseOverlay (T115): dashed white "you" ghost + bold amber ringed target
+    with per-joint pulse cues + hint card
 ```
 
 - **Temporal filtering (T108).** Each joint has an independent
@@ -46,10 +51,13 @@ CameraX ImageAnalysis (shared stream)
   away a reappearing point is adopted instantly instead of flying across the frame.
   Empty or near-empty detector results (fewer than 8 visible points) get a matching 350 ms
   presence grace before the overlay clears. Tuning is experimental.
-- **Coaching.** Eight standing portrait poses; each condition emits a continuous 0..1
-  score and a joint-level hint. Pose score is the unweighted mean; ready at 0.75 confirmed
-  over 4 results, drops below 0.60 over 3 results. A missing required limb is surfaced
-  before any angle hint. All thresholds are torso-length-normalised and experimental.
+- **Coaching.** Twelve standing portrait poses (8 in the T72 v1 batch, 4 in T115:
+  arms crossed, one hand on hip, side reach, hand to chest); the portable catalogue is
+  [`../../assets/pose-library/`](../../assets/pose-library/README.md). Each condition emits
+  a continuous 0..1 score and a joint-level hint. Pose score is the unweighted mean; ready
+  at 0.75 confirmed over 4 results, drops below 0.60 over 3 results. A missing required
+  limb is surfaced before any angle hint. All thresholds are torso-length-normalised and
+  experimental.
 - **Target retargeting (T109).** The target figure is not a generic mannequin: a torso
   similarity transform gives the base projection, shoulders and hips are pinned to the
   observed joints exactly, and the head plus every visible limb chain are placed along

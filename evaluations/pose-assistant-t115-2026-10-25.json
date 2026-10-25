@@ -1,0 +1,45 @@
+{
+  "solution": "pose-assistant",
+  "batch": "T115",
+  "date": "2026-10-25",
+  "status": "experimental",
+  "model": "pose_landmarker_lite",
+  "model_sha256": "59929e1d1ee95287735ddd833b19cf4ac46d29bc7afddbbf6753c459690d574a",
+  "runtime": "com.google.mediapipe:tasks-vision:1.1.1, PoseLandmarker LIVE_STREAM, CPU, numPoses=1, confidences 0.5",
+  "street_snap_commit": "T115 batch on bestksl fork main (5993918 fetch-depth fix is the prior commit); merge SHA backfilled after the PR merges",
+  "device": {
+    "name": "JVM unit tests on synthetic skeletons",
+    "backend": "no inference — geometry/filter/UI-contract logic only"
+  },
+  "changes": {
+    "catalogue": "8 -> 12 standing portrait poses: added cross_arms, one_hand_on_hip, side_reach, hand_to_chest; each with two continuous-score conditions and Chinese joint-level hints",
+    "overlay_visual_grammar": "observed figure -> faint white dashed ghost (1.5dp, alpha .50/.18 ready); target -> 3.5dp amber solid with glow and dark-outlined ring joints; per-target-joint breathing pulse ring when observed/target normalised distance exceeds 0.06 frame units; one-line legend in the hint card",
+    "assets": "portable pose library (12 templates, CC0, rendered SVG) and composition library (29 patterns, 22 mapped to the on-device rule layer) under assets/"
+  },
+  "probe": {
+    "classes": [
+      "PoseCoachTest T115 additions (8): met + neutral-anti-false-positive per new pose; catalogue sanity 8 -> 12; pose cycling uses catalogue size dynamically",
+      "PoseProjectionTest existing everyCataloguePoseProjectsWithAllDrawnJoints automatically covers the four new templates"
+    ],
+    "score_verification": "threshold arithmetic independently recomputed outside the app: met samples score 1.0 on both conditions; neutral stance scores 0.00-0.53 per pose (all below the 0.75 ready gate); cross-pose geometric ambiguity (e.g. arms-crossed resembles one-hand-on-hip) is acceptable because the coach evaluates only the user-selected pose, it is not a classifier",
+    "new_pose_thresholds_t_units": {
+      "cross_arms": "wrist distance/T 0.50->0.15 ramp; wrist-mid centred on shoulder midline; wrist band at shoulder+0.70T; elbows beyond 1.0-1.6 shoulder-half widths",
+      "one_hand_on_hip": "wrist-to-hip-mid/T 1.0->0.40; elbow 0.9->1.5 shoulder-half; best of either side",
+      "side_reach": "wrist horizontal reach 1.5->2.7 shoulder-half widths; elbow angle 125->160; best side",
+      "hand_to_chest": "wrist-to-chest-point/T 0.60->0.22 (chest at shoulder+0.35T); elbow 0.8->1.4; best side"
+    }
+  },
+  "not_assertable_on_jvm": [
+    "visual separation readability (dashed ghost vs ringed target on real backgrounds)",
+    "pulse cue intuitiveness and 0.06 distance threshold on real bodies",
+    "new poses' photographic coaching validity"
+  ],
+  "adversarial_review_followups": [
+    "pulse distance mixes frame-width and frame-height fractions; the Euclidean 0.06 threshold is aspect-ratio dependent and must be re-tuned on device",
+    "cross_arms wrist-distance condition cannot distinguish crossed arms from hands clasped together at the chest; a forearm-horizontality condition is a candidate follow-up",
+    "single-side poses (one_hand_on_hip, side_reach, hand_to_chest) put no constraint on the unselected arm, by design, matching the earlier one-arm poses",
+    "the target ring's dark outline is nearly invisible on the demo card's dark background; amber ring itself stays legible, no functional impact"
+  ],
+  "honor_vs3": "not-verified",
+  "open": "T90 device pass (visual confirmation of both figures, pulse legibility, cadence/thermals), T91 labelled photo set, real-subject threshold calibration"
+}

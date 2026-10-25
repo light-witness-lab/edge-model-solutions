@@ -1,0 +1,186 @@
+{
+  "schema_version": "composition-library/v1",
+  "description": "Classic photographic composition patterns for street/portrait shooting, mapped onto the street-snap on-device rule layer (CompositionStyle enum + executable move sentences). Entries with app_style=null are library knowledge not yet implemented on-device. This data is editorial/reference material authored for the project (CC0-1.0); no third-party images are bundled.",
+  "license": "CC0-1.0",
+  "app_source": {
+    "repository": "light-witness-lab/street-snap",
+    "file": "app/src/main/java/dev/streetsnap/app/composition/CompositionStyle.kt",
+    "state": "22 enum styles; the rule layer emits a Chinese executable move + a vocabulary line at ~2.4 analyses/s (AVD figure, real cadence not-verified)"
+  },
+  "patterns": [
+    {
+      "id": "rule_of_thirds", "zh": "三分构图", "en": "Rule of Thirds",
+      "family": "placement", "app_style": "THIRDS", "app_covered": true,
+      "description_zh": "主体或兴趣点落在四条三分线交点附近，画面比居中更有动势。",
+      "cue_zh": "让主体落在左/右/上/下三分线交点"
+    },
+    {
+      "id": "centered", "zh": "中心构图", "en": "Centred Composition",
+      "family": "placement", "app_style": "CENTERED", "app_covered": true,
+      "description_zh": "主体居于画面正中，适合对称环境、正面人像和强主体表达。",
+      "cue_zh": "让主体居中"
+    },
+    {
+      "id": "symmetry", "zh": "对称构图", "en": "Symmetry",
+      "family": "balance", "app_style": "SYMMETRY", "app_covered": true,
+      "description_zh": "沿竖轴或横轴形成镜像，建筑、水面倒影、正面站姿常用。",
+      "cue_zh": "调整机位让左右或上下元素对称"
+    },
+    {
+      "id": "diagonal", "zh": "对角线构图", "en": "Diagonal Composition",
+      "family": "lines", "app_style": "DIAGONAL", "app_covered": true,
+      "description_zh": "主体走向沿对角线展开，比横线更有方向感和张力。",
+      "cue_zh": "转动机位让主体沿对角线排布"
+    },
+    {
+      "id": "triangle", "zh": "三角形构图", "en": "Triangular Composition",
+      "family": "shapes", "app_style": "TRIANGLE", "app_covered": true,
+      "description_zh": "三个人或三个视觉重心连成三角，站姿人像里最稳的分组形式。",
+      "cue_zh": "调整站位让三个重心构成三角"
+    },
+    {
+      "id": "leading_lines", "zh": "引导线构图", "en": "Leading Lines",
+      "family": "lines", "app_style": "LEADING_LINES", "app_covered": true,
+      "description_zh": "道路、栏杆、光影等线条把视线引向主体。",
+      "cue_zh": "平移机位让线条指向主体"
+    },
+    {
+      "id": "convergence", "zh": "汇聚线构图", "en": "Converging Lines",
+      "family": "lines", "app_style": "CONVERGENCE", "app_covered": true,
+      "description_zh": "平行线向远处汇聚于消失点，街道与走廊最常见。",
+      "cue_zh": "站到线的延长线上，让消失点落在主体附近"
+    },
+    {
+      "id": "vertical_lines", "zh": "竖线构图", "en": "Vertical Lines",
+      "family": "lines", "app_style": "VERTICAL", "app_covered": true,
+      "description_zh": "竖向线条强调高度与挺拔，适合全身人像和高楼。",
+      "cue_zh": "保持机身边线与竖线平行"
+    },
+    {
+      "id": "horizon_split", "zh": "水平分割", "en": "Horizon Placement",
+      "family": "lines", "app_style": "HORIZON", "app_covered": true,
+      "description_zh": "地平线明确落在上三分或下三分线，交代天与地的取舍。",
+      "cue_zh": "地平线放到上或下三分线，不要停在中间"
+    },
+    {
+      "id": "horizon_bisection", "zh": "水平腰斩（反例）", "en": "Bisected Frame (anti-pattern)",
+      "family": "anti_pattern", "app_style": "HORIZON_SPLIT", "app_covered": true,
+      "description_zh": "地平线横在画面正中把画面切成两半，主体失去归属，是街景常见错误。",
+      "cue_zh": "抬高机位给天空让出空间，或压低机位让地面成片"
+    },
+    {
+      "id": "framing", "zh": "框式构图", "en": "Framing",
+      "family": "depth", "app_style": "FRAME", "app_covered": true,
+      "description_zh": "门洞、窗、树枝在画面内形成第二层框，把主体围住。",
+      "cue_zh": "半步移动，让前景框把主体完整围出"
+    },
+    {
+      "id": "foreground_depth", "zh": "前景层次", "en": "Foreground Interest",
+      "family": "depth", "app_style": "FOREGROUND_DEPTH", "app_covered": true,
+      "description_zh": "近景放一个虚化或半遮挡元素，二维画面立刻有纵深。",
+      "cue_zh": "靠近前景，让它从画面边缘探入"
+    },
+    {
+      "id": "three_depth_layers", "zh": "三层纵深", "en": "Three Depth Layers",
+      "family": "depth", "app_style": "DEPTH_LAYERS", "app_covered": true,
+      "description_zh": "前景—中景主体—远景三层都可读，是街拍纵深最完整的形态。",
+      "cue_zh": "机位与脚步微调，直到前中后三层都不打架"
+    },
+    {
+      "id": "repetition", "zh": "节奏构图", "en": "Repetition and Pattern",
+      "family": "shapes", "app_style": "REPETITION", "app_covered": true,
+      "description_zh": "重复的形状或间距形成节奏，其中一个元素打破规律时最出片。",
+      "cue_zh": "让重复元素排满画面，等一个异质主体出现"
+    },
+    {
+      "id": "tonal_contrast", "zh": "明暗对比", "en": "Tonal Contrast",
+      "family": "light", "app_style": "CONTRAST", "app_covered": true,
+      "description_zh": "主体与背景在亮度上拉开，夜景逆光剪影都靠它突出主体。",
+      "cue_zh": "移动到让主体站在更亮或更暗的背景前"
+    },
+    {
+      "id": "negative_space", "zh": "留白构图", "en": "Negative Space",
+      "family": "space", "app_style": "NEGATIVE_SPACE", "app_covered": true,
+      "description_zh": "大面积干净背景把主体托出，视线和呼吸感都留给主体朝向的一侧。",
+      "cue_zh": "平移让主体背后出现大片干净区域"
+    },
+    {
+      "id": "environmental_context", "zh": "环境构图", "en": "Environmental / Wide Context",
+      "family": "space", "app_style": "WIDE_CONTEXT", "app_covered": true,
+      "description_zh": "人在环境中占比不大但位置明确，用场景讲故事。",
+      "cue_zh": "退后半步把环境交代完整"
+    },
+    {
+      "id": "too_tight", "zh": "取景太满（反例）", "en": "Crowded Frame (anti-pattern)",
+      "family": "anti_pattern", "app_style": "TOO_TIGHT", "app_covered": true,
+      "description_zh": "内容同时顶住三条以上画面边，中间也不空，画面拥挤没有重点。",
+      "cue_zh": "退后半步"
+    },
+    {
+      "id": "edge_cut", "zh": "主体贴边（反例）", "en": "Edge Cut (anti-pattern)",
+      "family": "anti_pattern", "app_style": "EDGE_CUT", "app_covered": true,
+      "description_zh": "主体单边被画面切掉，像误框而不是刻意裁切。",
+      "cue_zh": "向贴边的反方向平移半步"
+    },
+    {
+      "id": "minimalism", "zh": "极简留白", "en": "Minimalism",
+      "family": "space", "app_style": "MINIMAL", "app_covered": true,
+      "description_zh": "画面绝大部分安静，单一小质量体承担全部内容。",
+      "cue_zh": "靠近主体并把其余元素移出画面"
+    },
+    {
+      "id": "conservative", "zh": "稳妥取景", "en": "Safe Framing",
+      "family": "fallback", "app_style": "CONSERVATIVE", "app_covered": true,
+      "description_zh": "无明确构图信号时的安全拍法：主体完整、四周留边。",
+      "cue_zh": "保持当前取景"
+    },
+    {
+      "id": "generic_analysis", "zh": "画面分析（兜底）", "en": "Generic Analysis (fallback)",
+      "family": "fallback", "app_style": "GENERIC", "app_covered": true,
+      "description_zh": "规则层无法归到具体词汇时的兜底状态，不输出构图主张。",
+      "cue_zh": "无"
+    },
+    {
+      "id": "golden_spiral", "zh": "黄金螺旋", "en": "Golden Spiral",
+      "family": "placement", "app_style": null, "app_covered": false,
+      "description_zh": "兴趣点沿斐波那契螺旋收束。与三分高度相关，街拍实操中常被三分替代，端侧未独立实现。",
+      "cue_zh": "素材库候选：未来可由三分检测器加螺旋引导线叠加"
+    },
+    {
+      "id": "low_angle", "zh": "仰拍机位", "en": "Low Angle",
+      "family": "camera_position", "app_style": null, "app_covered": false,
+      "description_zh": "机位放低让人物显高、建筑显宏伟。App 已有机位抬高/降低的执行动作，但尚无角度分类器。",
+      "cue_zh": "素材库候选：需要重力方向/设备姿态输入"
+    },
+    {
+      "id": "high_angle", "zh": "俯拍机位", "en": "High Angle",
+      "family": "camera_position", "app_style": null, "app_covered": false,
+      "description_zh": "机位高于主体向下拍，人群、街道纹理和人物关系更清楚。",
+      "cue_zh": "素材库候选：需要重力方向/设备姿态输入"
+    },
+    {
+      "id": "s_curve", "zh": "S 曲线", "en": "S-Curve",
+      "family": "lines", "app_style": null, "app_covered": false,
+      "description_zh": "河流、道路、身姿呈 S 形游走，比单一直线更柔美。",
+      "cue_zh": "素材库候选：需要曲线检测，超出当前直线/色块特征"
+    },
+    {
+      "id": "rule_of_odds", "zh": "奇数法则", "en": "Rule of Odds",
+      "family": "shapes", "app_style": null, "app_covered": false,
+      "description_zh": "画面里主体数量为奇数时更自然、更容易找到中心。",
+      "cue_zh": "素材库候选：依赖人物计数（未来 YOLO 主体分支可提供）"
+    },
+    {
+      "id": "silhouette", "zh": "剪影", "en": "Silhouette",
+      "family": "light", "app_style": null, "app_covered": false,
+      "description_zh": "主体欠曝成纯轮廓、背景明亮，本质是曝光选择而非几何分类。",
+      "cue_zh": "素材库候选：测光分区支持后与曝光建议联动"
+    },
+    {
+      "id": "visual_balance", "zh": "视觉平衡", "en": "Visual Balance",
+      "family": "balance", "app_style": null, "app_covered": false,
+      "description_zh": "主体一侧的质量由另一侧的次要元素平衡，不一定要对称。",
+      "cue_zh": "素材库候选：需要质量分布估计，可在规则层特征上扩展"
+    }
+  ]
+}

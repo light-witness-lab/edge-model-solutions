@@ -96,6 +96,7 @@ Every solution should answer:
 ```text
 solutions/          Scenario-level pipelines and SOPs
 models/              Model manifests, provenance, licenses, and adapters
+assets/              CC0 coaching libraries: pose templates, composition patterns
 benchmarks/          Reproducible runs, schemas, and device results
 runtimes/            Runtime notes and integration constraints
 visualizations/      Overlay examples, diagrams, and report figures
