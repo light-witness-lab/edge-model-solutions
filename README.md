@@ -71,7 +71,7 @@ The selected index maps to a rectangle already proposed by the rule layer. Non-f
 >
 > Subject: the full inference path on a phone. Latency is measured stage by stage; cloud-era techniques are examined for where they stop holding on a single SoC with unified memory; performance is quoted at sustained-load thermal steady state, never as cold-start numbers.
 
-The composition stack runs gated decisions at 1–3 per second today; the north star is content-adaptive understanding over a continuously analyzing viewfinder. Closing that gap is an engineering research line, not a model swap, so it is tracked here with the same evidence discipline as a solution record. Three questions structure it:
+The composition stack runs gated decisions at 1–3 per second today; the target is content-adaptive understanding over a continuously analyzing viewfinder. The gap is an engineering research line rather than a model swap, so it is tracked here with the same evidence discipline as a solution record. Three questions structure it:
 
 1. **Runtime landscape** — operator coverage, latency, binary size, threading and NNAPI/NPU support across ONNX Runtime, MNN, NCNN, ExecuTorch, LiteRT, MediaPipe LLM and llama.cpp, and which runtime fits which model role. Notes: [`docs/research/01-runtime-survey.md`](docs/research/01-runtime-survey.md).
 2. **KV and prefix caching on phones** — what the vision prefix and fixed question let us cache, how A/B/C candidates should fan out from one shared prefix, which KV techniques are wasted at 256–600M scale, and why adjacent frames cannot share KV directly. Notes: [`docs/research/02-kv-and-prefix-caching.md`](docs/research/02-kv-and-prefix-caching.md).

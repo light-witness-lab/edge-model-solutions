@@ -93,7 +93,7 @@ Qualcomm publishes relative NPU gains, not absolute TOPS; the "45 TOPS" figure b
 
 - 3DMark 20-loop stress tests (PhoneArena/NotebookCheck compilation, tier 2): 8 Elite phones throttle 30–50% — S25 Ultra 6208→2981 (~48%), plateau by loop 7; some 8 Elite Gen 5 phones drop 55–60%; only fan-cooled gaming phones hold ~80–100%. <https://www.phonearena.com/news/the-snapdragon-8-elite-gen-5-is-fast-but-not-all-phones-can-handle-the-heat_id175544>
 - Sustained-LLM test, Qwen2.5-1.5B q4, 20 rounds (tier 3): iPhone 16 Pro drops ~40% within 3 rounds to a 23.7 tok/s thermal plateau (peak 40.5); S24 Ultra decays ~15% over 20 rounds; a 1 s gap does not permit thermal recovery. <https://arxiv.org/pdf/2603.23640v2>
-- FastVLM-0.5B ×100 on 8 Elite (tier 3): NPU path steady at 40.8 °C skin vs 51.3 °C CPU; after 15 minutes the CPU path hits an 82 °C throttle point while NPU stays at 66 °C. For an always-on viewfinder, NPU is not just faster, it is the only sustainable path. <https://arxiv.org/pdf/2606.27906>
+- FastVLM-0.5B ×100 on 8 Elite (tier 3): NPU path steady at 40.8 °C skin vs 51.3 °C CPU; after 15 minutes the CPU path hits an 82 °C throttle point while NPU stays at 66 °C. On these numbers an always-on viewfinder is NPU-bound: the CPU path does not survive a sustained workload. <https://arxiv.org/pdf/2606.27906>
 
 ### 3.5 Camera/ISP contention — the real opponent of "staggering"
 

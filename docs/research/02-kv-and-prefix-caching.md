@@ -62,7 +62,7 @@ Cloud references for the engineering shape (directly portable in architecture): 
 - **Sequential fan-out**: prefill the shared prefix once in one session, append tail A, then rewind KV to the fork point for B and C. llama.cpp exposes this via `llama_memory_seq_rm`; ORT GenAI via `generator.rewind_to()`.
 - **Parallel fan-out (fork)**: branch three sequences from one KV snapshot. **MLC LLM's `ForkSequence` is the only native mobile API**; elsewhere you would copy KV buffers yourself. For single-token outputs sequential fan-out is sufficient — do not pay for concurrency.
 
-### 2.4 Adjacent frames (1–3 Hz now, 120 Hz north star)
+### 2.4 Adjacent frames (1–3 Hz now, 120 Hz target)
 
 Direct reuse is invalid: pixels differ, vision KV differs, and mid-prompt placement poisons downstream text positions. 2025–2026 research:
 

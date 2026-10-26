@@ -28,7 +28,7 @@ Plus, per run: `prefix_reuse_ms` (cold full-prefill vs shared vision/prefix), th
 
 - **W1 – decision head (d1, zero generated tokens).** The 20 deterministic 512×512 contact sheets already frozen in [`scripts/d1-prompt-eval`](../../scripts/d1-prompt-eval/) (P1/P2 bias probes + 18 discrimination sheets), plus a slot for the independent labelled photo set (the only accepted aesthetic evidence, still pending). Vision features are computed once per sheet and reused, mirroring the shipping gate.
 - **W2 – VLM choice (SmolVLM 256M/500M).** The same sheets through vision→embed→decoder, both a single ordering and the guarded second ordering, so UNSTABLE rates and real wall-clock are captured together.
-- **W3 – continuous scan (future).** A frame stream at a target cadence (today 1–3 rounds/s, north star 120 Hz analysis) that sweeps the camera; measures freshness under a moving scene signature (edge-triggered rounds), backpressure, and thermal falloff over minutes rather than a single cold run.
+- **W3 – continuous scan (future).** A frame stream at a target cadence (today 1–3 rounds/s, target 120 Hz analysis) that sweeps the camera; measures freshness under a moving scene signature (edge-triggered rounds), backpressure, and thermal falloff over minutes rather than a single cold run.
 
 ## Variable matrix
 
