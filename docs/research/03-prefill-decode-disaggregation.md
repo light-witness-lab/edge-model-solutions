@@ -1,6 +1,6 @@
 # Prefill/decode disaggregation on a phone
 
-> 设想很朴素：云端把 prefill 和 decode 拆到不同机器上吃到了红利，手机上能不能让「重的一眼」和「轻的持续判断」错峰跑在不同核心、不同 session 上？本篇的结论偏扫兴——对我们这个零生成 token 的决策 workload，云端意义上的 PD 分离在单芯片手机上基本不成立；真正值得做的是它在端侧的两个「转世」：相位感知的异构后端映射与跨帧缓存。
+> 云端将 prefill 与 decode 分布到不同机器获得收益；手机上对应的问题是，重的一次性感知与轻的持续判断能否错峰调度到不同核心、不同 session。结论：对零生成 token 的决策 workload，云端意义上的 P/D 分离在单芯片手机上基本不成立；具备实测依据的端侧形态是相位感知的异构后端映射与跨帧缓存。
 >
 > Survey, 2026-10. External research only — see [evidence tiers](README.md#evidence-discipline). Nothing here is a device result.
 

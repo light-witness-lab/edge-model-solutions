@@ -67,9 +67,9 @@ The selected index maps to a rectangle already proposed by the rule layer. Non-f
 
 ## Research line: on-device inference performance
 
-> 这里是「技术人员的小天地」：不追新模型，不喊「端侧大模型」口号，只把一件事拆开量清楚——手机这条推理链路上，时间到底花在哪、哪些云端技巧在单芯片上根本不成立、热起来之后还剩多少。
+> 研究对象是手机上的整条推理链路：逐段测量延迟分布，逐项检验云端常用技术在单 SoC 统一内存上的成立边界；性能以持续负载下的热稳态为工作点，不采用冷启动数字。
 >
-> A technicians' corner rather than a marketing track: no new checkpoints, no "on-device LLM" slogans — just the inference path taken apart and measured, cloud techniques stress-tested against single-die reality, and thermal steady state treated as the real operating point.
+> Subject: the full inference path on a phone. Latency is measured stage by stage; cloud-era techniques are examined for where they stop holding on a single SoC with unified memory; performance is quoted at sustained-load thermal steady state, never as cold-start numbers.
 
 The composition stack runs gated decisions at 1–3 per second today; the north star is content-adaptive understanding over a continuously analyzing viewfinder. Closing that gap is an engineering research line, not a model swap, so it is tracked here with the same evidence discipline as a solution record. Three questions structure it:
 

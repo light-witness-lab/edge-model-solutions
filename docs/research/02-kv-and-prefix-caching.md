@@ -1,6 +1,6 @@
 # KV and prefix caching on phones
 
-> 云端推理的省钱利器——PagedAttention、radix prefix cache、KV 量化、token 淘汰——搬到手机上要先问三个问题：KV 到底占多少内存、我们的序列里什么东西真的恒定、像素一变还有什么能复用。结论：在 256–600M、短上下文、零到单 token 输出的场景下，KV 内存根本不是瓶颈，真正白捡的便宜是「同帧只编码一次、固定题面只 prefill 一次」，而这件事所有主流端侧 runtime 现在就能做。
+> PagedAttention、radix prefix cache、KV 量化、token 淘汰等云端技术迁移到手机之前，先要回答三个问题：KV cache 占多少内存、本工作负载的序列中什么真正恒定、相邻帧像素变化后还有什么可以复用。结论：在 256–600M、短上下文、零到单 token 输出的场景下，KV 内存不是瓶颈；可落地的主要收益是「同帧只编码一次、固定题面只 prefill 一次」，主流端侧 runtime 现已支持。
 >
 > Survey, 2026-10. External research only — see [evidence tiers](README.md#evidence-discipline). KV-size arithmetic below uses public model configs and is independently recomputable.
 

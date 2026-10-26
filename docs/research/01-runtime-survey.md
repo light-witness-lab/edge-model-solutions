@@ -1,6 +1,6 @@
 # On-device inference runtimes (2026-10)
 
-> 选框架不是选信仰，是选「哪一段算力放在哪个后端上、谁来为可复现性兜底」。这篇横评只回答一个工程问题：一个 256–600M 的多模态 ranker（视觉 encoder + 小决策头），1–3 次/秒、30 秒预算、要求确定性 benchmark，在 2026 年的 Android/iOS 上到底该用什么。答案不浪漫：ONNX Runtime CPU/XNNPACK 兜底，llama.cpp 当手工优化标尺，QNN/ExecuTorch 只做骁龙旗舰增益，NNAPI 与 ncnn-LLM 出局。
+> 这篇横评只回答一个工程问题：一个 256–600M 的多模态 ranker（视觉 encoder + 小决策头），1–3 次/秒、30 秒预算、要求确定性 benchmark，在 2026 年的 Android/iOS 上该用什么运行时。评估维度是各段算力对应哪个后端、谁为可复现性兜底。结论：ONNX Runtime CPU/XNNPACK 作为可移植基线，llama.cpp 作为手工优化性能标尺，QNN/ExecuTorch 仅在骁龙旗舰上提供增量收益，NNAPI 与 ncnn-LLM 不进入候选。
 >
 > Survey, 2026-10-18. External research only — see [evidence tiers](README.md#evidence-discipline). Versions and AAR sizes below were checked against official repositories / Maven Central / Google Maven; latency figures carry their device and quantization. Nothing here is a device result of our own.
 

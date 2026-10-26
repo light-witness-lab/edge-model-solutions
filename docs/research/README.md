@@ -1,8 +1,8 @@
 # On-device inference research
 
-> 这是一间「技术人员的小天地」：这里不放产品口号，只放工程调研、benchmark 计划、可复现的数字，以及被证伪的设想。每篇笔记都区分「云端成立」与「端侧成立」，区分一手证据、厂商口径与预印本，并且最终都要接受本仓库 benchmark 协议的检验。
+> 收录工程调研、benchmark 计划、可复现的数字与被证伪的设想。每篇笔记区分结论在「云端」还是「端侧」成立，区分一手证据、厂商口径与预印本；未通过本仓库 benchmark 协议检验的内容不称证据。
 >
-> This is the technicians' corner: engineering surveys, benchmark plans, reproducible numbers, and disproved ideas. Every note separates what holds in the cloud from what holds on-device, separates primary evidence from vendor claims and preprints, and stays subordinate to the benchmark protocol in [`benchmarks/inference-perf`](../../benchmarks/inference-perf/).
+> Engineering surveys, benchmark plans, reproducible numbers, and disproved ideas. Every note separates what holds on-device from what holds in the cloud, distinguishes primary evidence from vendor claims and preprints, and claims no evidence until it passes the benchmark protocol in [`benchmarks/inference-perf`](../../benchmarks/inference-perf/).
 
 ## Notes
 
